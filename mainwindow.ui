@@ -100,7 +100,7 @@
         <string>Y</string>
        </property>
       </widget>
-      <widget class="QToolButton" name="toolButton_2">
+      <widget class="QToolButton" name="toolButton_controller">
        <property name="geometry">
         <rect>
          <x>270</x>
@@ -120,7 +120,7 @@ font: 90 16pt &quot;MS Shell Dlg 2&quot;;</string>
         <string>К</string>
        </property>
       </widget>
-      <widget class="QToolButton" name="toolButton_3">
+      <widget class="QToolButton" name="toolButton_plant">
        <property name="geometry">
         <rect>
          <x>424</x>
@@ -153,7 +153,7 @@ font: 90 16pt &quot;MS Shell Dlg 2&quot;;</string>
         <string>...</string>
        </property>
       </widget>
-      <widget class="QToolButton" name="toolButton_5">
+      <widget class="QToolButton" name="toolButton_feedback">
        <property name="geometry">
         <rect>
          <x>350</x>

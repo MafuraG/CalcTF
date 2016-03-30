@@ -8,8 +8,8 @@ ControlSystem::ControlSystem()
 void ControlSystem::setControlTF(const QString &zeroP, const QString &poleP)
 {
 
-    controlTF = std::make_shared<TransferFunction>();
-    controlTF->setTF(zeroP,poleP);
+    controllerTF = std::make_shared<TransferFunction>();
+    controllerTF->setTF(zeroP,poleP);
 }
 
 
@@ -31,7 +31,7 @@ void ControlSystem::setPlantTF(const QString &zeroP, const QString &poleP)
 
 std::shared_ptr<TransferFunction> ControlSystem::getControlTF() const
 {
-    return controlTF;
+    return controllerTF;
 }
 
 std::shared_ptr<TransferFunction> ControlSystem::getFeedbackTF() const
@@ -47,4 +47,7 @@ std::shared_ptr<TransferFunction> ControlSystem::getPlantTF() const
 void ControlSystem::setCsTF(TransferFunction &cTF, const TransferFunction &fbTF, const TransferFunction &pTF)
 {
     //csTF = cTF;
+    auto res = ((cTF * pTF * -1) / (cTF * pTF * fbTF)) + 1 ;
+
+    csTF = std::make_shared<TransferFunction>(res);
 }

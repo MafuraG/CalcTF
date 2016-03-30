@@ -12,29 +12,36 @@ class TransferFunction
 {
 public:
     TransferFunction();
+    TransferFunction(TransferFunction &tf0);
     TransferFunction(const QString &zeroStr, const QString &poleStr);
     TransferFunction(const std::string &zeroStr, const std::string &poleStr);
 
     void setTF(const QString &zeroStr, const QString &poleStr);
-    TransferFunction operator *(const TransferFunction &tr0);
-    TransferFunction operator -(const TransferFunction &tr0);
+    TransferFunction& operator *(const TransferFunction &tr0);    
+    TransferFunction& operator /(const TransferFunction &tr0);
+    TransferFunction& operator -(const TransferFunction &tr0);
+    TransferFunction& operator +(const TransferFunction &tr0);
 
+    TransferFunction &operator *(const double scalar);
+    TransferFunction& operator /(const double scalar);
+    TransferFunction& operator -(const double scalar);
+    TransferFunction& operator +(const double scalar);
+
+    void setZerosPoly(const QString &polyStr,QString *errString = nullptr);
+    void setPolesPoly(const QString &polyStr,QString *errString = nullptr);
+    QString getPolesStr();
+    QString getZeroStr();
 
 private:
     std::shared_ptr<Polynomial> zerosPoly() const;
     void setZerosPoly(std::shared_ptr<Polynomial> &zerosPoly);
 
     std::shared_ptr<Polynomial> polesPoly() const;
-    void setPolesPoly(std::shared_ptr<Polynomial> &polesPoly);
-
-    void setZerosPoly(const QString &polyStr);
-    void setPolesPoly(const QString &polyStr);
-    QString getPolesStr();
-    QString getZeroStr();
+    void setPolesPoly(std::shared_ptr<Polynomial> &polesPoly);    
 
     std::shared_ptr<Polynomial> m_zerosPoly;
     std::shared_ptr<Polynomial> m_polesPoly;
-    void setPolynomialFomStr(const QString &polyStr, std::shared_ptr<Polynomial> &p);
+    void setPolynomialFomStr(const QString &polyStr, std::shared_ptr<Polynomial> &p, QString *errString = nullptr);
     void getPolynomialStr(QString &polyStr, const std::shared_ptr<Polynomial> &p);
 };
 

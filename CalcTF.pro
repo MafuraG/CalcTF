@@ -18,14 +18,16 @@ SOURCES += main.cpp\
     PolynomialRootFinder.cpp \
     tfdialog.cpp \
     transferfunction.cpp \
-    controlsystem.cpp
+    controlsystem.cpp \
+    errorstrings.cpp
 
 HEADERS  += mainwindow.h \
     Polynomial.h \
     PolynomialRootFinder.h \
     tfdialog.h \
     transferfunction.h \
-    controlsystem.h
+    controlsystem.h \
+    errorstrings.h
 
 FORMS    += mainwindow.ui \
     tfdialog.ui
