@@ -27,10 +27,11 @@ public:
     TransferFunction& operator -(const double scalar);
     TransferFunction& operator +(const double scalar);
 
-    void setZerosPoly(const QString &polyStr,QString *errString = nullptr);
-    void setPolesPoly(const QString &polyStr,QString *errString = nullptr);
+    QString setZerosPoly(const QString &polyStr,QString *errString = nullptr);
+    QString setPolesPoly(const QString &polyStr,QString *errString = nullptr);
     QString getPolesStr();
     QString getZeroStr();
+
 
 private:
     std::shared_ptr<Polynomial> zerosPoly() const;
@@ -41,8 +42,10 @@ private:
 
     std::shared_ptr<Polynomial> m_zerosPoly;
     std::shared_ptr<Polynomial> m_polesPoly;
-    void setPolynomialFomStr(const QString &polyStr, std::shared_ptr<Polynomial> &p, QString *errString = nullptr);
-    void getPolynomialStr(QString &polyStr, const std::shared_ptr<Polynomial> &p);
+    QString setPolynomialFomStr(const QString &polyStr, std::shared_ptr<Polynomial> &p, QString *errString = nullptr);
+    QString getPolynomialStr(QString &polyStr, const std::shared_ptr<Polynomial> &p);
+    QString getPolynomialEquation(const std::shared_ptr<Polynomial> &p);
+    QString getTfEquation();
 };
 
 #endif // TRANSFERFUNCTION_H

@@ -23,10 +23,10 @@ public:
 
 private:
 
-    std::shared_ptr<TransferFunction> controllerTF;
-    std::shared_ptr<TransferFunction> feedbackTF;
-    std::shared_ptr<TransferFunction> plantTF;
-    std::shared_ptr<TransferFunction> csTF; //by system I mean a feed back control system with plant, feedback and control transfer functions
+    std::shared_ptr<TransferFunction> m_controllerTF;
+    std::shared_ptr<TransferFunction> m_feedbackTF;
+    std::shared_ptr<TransferFunction> m_plantTF;
+    std::shared_ptr<TransferFunction> m_csTF; //by system I mean a feed back control system with plant, feedback and control transfer functions
 
     void setCsTF(TransferFunction &cTF, const TransferFunction &fbTF, const TransferFunction &pTF);
 };

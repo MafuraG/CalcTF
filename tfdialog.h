@@ -34,6 +34,7 @@ private slots:
 private:
     Ui::TfDialog *ui;
     std::shared_ptr<TransferFunction> m_tf;
+    void clearUI();
 };
 
 #endif // TFDIALOG_H
