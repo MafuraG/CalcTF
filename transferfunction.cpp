@@ -5,6 +5,7 @@
 #include <QList>
 #include <QStringBuilder>
 #include <QVector>
+#include <QDebug>
 
 TransferFunction::TransferFunction()
 {    
@@ -142,9 +143,11 @@ void TransferFunction::setZerosPoly(std::shared_ptr<Polynomial> &zerosPoly)
 QString TransferFunction::setZerosPoly(const QString &polyStr,QString *errString)
 {
     auto p = m_zerosPoly;    
-    QString res = setPolynomialFomStr(polyStr,p,errString);
-    Polynomial p_ = (*p);
-    int degree = p_.Degree();
+    dumpValue(QString("In function setZeroPoly BEFORE edit"),p);
+    QString res = setPolynomialFomStr(polyStr,p,errString);   
+    qDebug()<<" =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=";
+    dumpValue(QString("In function setZeroPoly AFTER edit"),p);
+    m_zerosPoly = p ;
     return res;
 }
 
@@ -161,7 +164,12 @@ void TransferFunction::setPolesPoly(std::shared_ptr<Polynomial> &polesPoly)
 QString TransferFunction::setPolesPoly(const QString &polyStr,QString *errString)
 {
     auto p = m_polesPoly;
-    return setPolynomialFomStr(polyStr,p,errString);
+    dumpValue(QString("In function setPolesPoly BEFORE edit"),p);
+    QString res = setPolynomialFomStr(polyStr,p,errString);
+    qDebug()<<" =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= \n";
+    dumpValue(QString("In function setPolesPoly AFTER edit"),p);
+    m_polesPoly = p;
+    return res;
 }
 
 QString TransferFunction::getPolesStr()
@@ -201,19 +209,35 @@ QString TransferFunction::setPolynomialFomStr(const QString &polyStr, std::share
     }
     if (!pass) return (*errString);
 
+    qDebug() << "coefficients qlist " <<coeff_double_list;
+
     std::vector<double> coeff_double_vector = coeff_double_list.toVector().toStdVector();
+
+    qDebug() << "coefficients std vector size" << coeff_double_vector.size();
+
+    dumpValue(QString("In function setPolyFromStr Before assignment of p"),p);
 
     p = std::make_shared<Polynomial>();
 
     p->SetCoefficients(coeff_double_vector.data(),coeff_double_vector.size());
 
-    return getTfEquation();
+    dumpValue(QString("In function setPolyFromStr AFTER assignment of p"),p);    
+
+    return getPolynomialStr(p);
 }
 
-QString TransferFunction::getPolynomialStr(QString &polyStr, const std::shared_ptr<Polynomial> &p)
+QString TransferFunction::getPolynomialStr(const std::shared_ptr<Polynomial> p)
+{
+    QString polyStr = "";
+    getPolynomialStr(polyStr, p);
+    return polyStr;
+}
+
+
+QString TransferFunction::getPolynomialStr(QString &polyStr, const std::shared_ptr<Polynomial> p)
 {
     polyStr = "";
-    for(int i = 0 ; i < p->Degree(); i++){
+    for(int i = 0 ; i <= p->Degree(); i++){
        double coeff = (*p)[i];
        polyStr += QString::number(coeff) + " ";
     }
@@ -221,19 +245,19 @@ QString TransferFunction::getPolynomialStr(QString &polyStr, const std::shared_p
     return polyStr;
 }
 
-QString TransferFunction::getPolynomialEquation(const std::shared_ptr<Polynomial> &p)
+QString TransferFunction::getPolynomialEquation(const std::shared_ptr<Polynomial> p)
 {
     QString polyStr = "";
     QString power_line ;
     QString coeff_line ;
+    if (p->Degree() == 0) return polyStr;
     for(int i = p->Degree() ; i >= 0 ; i--){
        double coeff = (*p)[i];
-       power_line += QString(" %0  ").arg(i);
-       coeff_line += QString("%0  +").arg(coeff);
+       power_line += QString("  %0    ").arg(i);
+       coeff_line += QString("%0   +  ").arg(coeff);
     }
-    power_line += "\n";
 
-    polyStr = power_line + coeff_line;
+    polyStr = power_line + " \n" + coeff_line;
 
     return polyStr;
 }
@@ -246,7 +270,7 @@ QString TransferFunction::getTfEquation()
     int size = zeroStr.size();
 
     if (size < poleStr.size()) size = poleStr.size();
-    QString divider = "";
+    QString divider = "\n";
     for(int i = 0; i < size; i++){
         divider +="-";
     }
@@ -255,4 +279,15 @@ QString TransferFunction::getTfEquation()
     return zeroStr + divider + poleStr;
 
 
+}
+
+void TransferFunction::dumpValue(QString msg, const std::shared_ptr<Polynomial> &p)
+{
+    qDebug()<<msg<<"\n";
+    QString p_str;
+    qDebug()<< "Polynomial string = " << getPolynomialStr(p_str, p)<<"\n";
+//    qDebug()<< "Polynomial Poles string = " << getPolynomialStr(p_str, m_polesPoly)<<"\n";
+    qDebug()<< "Polynomial equation = "<< getPolynomialEquation(p)<<"\n";
+//    qDebug()<< "Polynomial Pole equation = "<< getPolynomialEquation(m_polesPoly)<<"\n";
+//    qDebug()<< "Transfer function equation = "<< getTfEquation()<<"\n";
 }

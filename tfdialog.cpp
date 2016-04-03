@@ -41,18 +41,24 @@ void TfDialog::on_lineEdit_zeroP_editingFinished()
 {
     QString zerosStr = ui->lineEdit_zeroP->text();
     if (zerosStr == "" ) return ;
-    QString res = m_tf->setZerosPoly(zerosStr,&res);
+    QString err;
+    QString res = m_tf->setZerosPoly(zerosStr,&err);
+    m_tf->dumpValue(" Dump Zero in on_lineEdit_zeroP_editingFinished()",m_tf->zerosPoly());
 
-    ui->label_error->setText(res);
+    if (err != "" ) ui->label_error->setText(err);
+    ui->label_error->setText(m_tf->getTfEquation());
 }
 
 void TfDialog::on_lineEdit_poleP_editingFinished()
 {
     QString polesStr = ui->lineEdit_poleP->text();
     if (polesStr == "") return;
-    QString res = m_tf->setPolesPoly(polesStr,&res);
+    QString err = "";
+    QString res = m_tf->setPolesPoly(polesStr,&err);
+    m_tf->dumpValue(" Dump Zero in on_lineEdit_poleP_editingFinished()",m_tf->zerosPoly());
 
-    ui->label_error->setText(res);
+    if (err != "" ) ui->label_error->setText(err);
+    ui->label_error->setText(m_tf->getTfEquation());
 }
 
 void TfDialog::clearUI(){
