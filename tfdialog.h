@@ -4,6 +4,7 @@
 #include "transferfunction.h"
 
 #include <QDialog>
+#include <QWebEngineView>
 #include <memory>
 
 namespace Ui {
@@ -34,6 +35,7 @@ private slots:
 private:
     Ui::TfDialog *ui;
     std::shared_ptr<TransferFunction> m_tf;
+    QWebEngineView *polyView;    
     void clearUI();
 };
 

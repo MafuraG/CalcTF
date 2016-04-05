@@ -4,5 +4,6 @@
         <file>images/window.png</file>
         <file>images/controlsystem.png</file>
         <file>images/clear.png</file>
+        <file>html/screen.html</file>
     </qresource>
 </RCC>

@@ -8,11 +8,22 @@ TfDialog::TfDialog(QWidget *parent) :
     ui->setupUi(this);
 
     m_tf = std::make_shared<TransferFunction>();
+
+    polyView = new QWebEngineView(this);
+
+    QHBoxLayout *hbox = new QHBoxLayout();
+
+    hbox->addWidget(polyView);
+
+    ui->gB_poly_browser->setLayout(hbox);
+
+    polyView->setUrl(QUrl("qrc:/html/screen.html"));
+
 }
 
 TfDialog::~TfDialog()
 {
-    delete ui;
+    delete ui;    
 }
 
 std::shared_ptr<TransferFunction> TfDialog::tf() const
@@ -45,8 +56,8 @@ void TfDialog::on_lineEdit_zeroP_editingFinished()
     QString res = m_tf->setZerosPoly(zerosStr,&err);
     m_tf->dumpValue(" Dump Zero in on_lineEdit_zeroP_editingFinished()",m_tf->zerosPoly());
 
-    if (err != "" ) ui->label_error->setText(err);
-    ui->label_error->setText(m_tf->getTfEquation());
+//    if (err != "" ) ui->label_error->setText(err);
+//    ui->label_error->setText(m_tf->getTfEquation());
 }
 
 void TfDialog::on_lineEdit_poleP_editingFinished()
@@ -57,12 +68,12 @@ void TfDialog::on_lineEdit_poleP_editingFinished()
     QString res = m_tf->setPolesPoly(polesStr,&err);
     m_tf->dumpValue(" Dump Zero in on_lineEdit_poleP_editingFinished()",m_tf->zerosPoly());
 
-    if (err != "" ) ui->label_error->setText(err);
-    ui->label_error->setText(m_tf->getTfEquation());
+//    if (err != "" ) ui->label_error->setText(err);
+//    ui->label_error->setText(m_tf->getTfEquation());
 }
 
 void TfDialog::clearUI(){
     ui->lineEdit_poleP->setText("");
     ui->lineEdit_zeroP->setText("");
-    ui->label_error->setText("");
+    //ui->label_error->setText("");
 }
