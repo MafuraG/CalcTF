@@ -77,3 +77,5 @@ void TfDialog::clearUI(){
     ui->lineEdit_zeroP->setText("");
     //ui->label_error->setText("");
 }
+
+QString TfDialog::PATH_POLY_HTML="screen.html";
