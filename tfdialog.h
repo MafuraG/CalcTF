@@ -6,6 +6,7 @@
 #include <QDialog>
 #include <QWebEngineView>
 #include <memory>
+#include <QString>
 
 namespace Ui {
 class TfDialog;
@@ -21,6 +22,9 @@ public:
 
     std::shared_ptr<TransferFunction> tf() const;
     void setTf(const std::shared_ptr<TransferFunction> &tf);
+    
+    static QString PATH_POLY_HTML;
+
 signals:
     void tfDialogueClosed(bool);
 private slots:

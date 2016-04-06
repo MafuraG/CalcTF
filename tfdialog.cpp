@@ -1,5 +1,6 @@
 #include "tfdialog.h"
 #include "ui_tfdialog.h"
+#include <QDir>
 
 TfDialog::TfDialog(QWidget *parent) :
     QDialog(parent),
@@ -17,7 +18,14 @@ TfDialog::TfDialog(QWidget *parent) :
 
     ui->gB_poly_browser->setLayout(hbox);
 
-    polyView->setUrl(QUrl("qrc:/html/screen.html"));
+    QString urlStr = QString("%0/%1").arg(QDir::currentPath(),
+                                          TfDialog::PATH_POLY_HTML);
+
+    //Better to use qApp->applicationDirPath coz it gives the location of executable
+
+    polyView->setUrl(urlStr);
+
+    qDebug()<<urlStr;
 
 }
 
