@@ -7,6 +7,7 @@
 #include <QWebEngineView>
 #include <memory>
 #include <QString>
+#include <QWebChannel>
 
 namespace Ui {
 class TfDialog;
@@ -27,6 +28,7 @@ public:
 
 signals:
     void tfDialogueClosed(bool);
+    void showEquation(QString);
 private slots:
     void on_buttonBox_accepted();
 
@@ -39,7 +41,8 @@ private slots:
 private:
     Ui::TfDialog *ui;
     std::shared_ptr<TransferFunction> m_tf;
-    QWebEngineView *polyView;    
+    QWebEngineView *polyView;
+    QWebChannel *webchannel;
     void clearUI();
 };
 

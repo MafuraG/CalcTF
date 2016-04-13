@@ -29,8 +29,11 @@ public:
 
     QString setZerosPoly(const QString &polyStr,QString *errString = nullptr);
     QString setPolesPoly(const QString &polyStr,QString *errString = nullptr);
-    QString getPolesStr();
-    QString getZeroStr();
+//    QString getPolesStr();
+//    QString getZeroStr();
+    QString getPolesVectorStr();
+    QString getZeroVectorStr();
+
 
     std::shared_ptr<Polynomial> zerosPoly() const;
     void setZerosPoly(std::shared_ptr<Polynomial> &zerosPoly);
@@ -40,7 +43,7 @@ public:
 
     void dumpValue(QString msg, const std::shared_ptr<Polynomial> &p);
 
-    QString getTfEquation();
+    QString getTfEquation(const QString &plane="s");
 private:
 
 
@@ -48,8 +51,9 @@ private:
     std::shared_ptr<Polynomial> m_polesPoly;
     QString setPolynomialFomStr(const QString &polyStr, std::shared_ptr<Polynomial> &p, QString *errString = nullptr);
     QString getPolynomialStr(QString &polyStr, const std::shared_ptr<Polynomial> p);
-    QString getPolynomialStr(const std::shared_ptr<Polynomial> p);
-    QString getPolynomialEquation(const std::shared_ptr<Polynomial> p);    
+//    QString getPolynomialStr(const std::shared_ptr<Polynomial> p);
+    QString getPolynomialEquation(const std::shared_ptr<Polynomial> p, const QString &plane);
+    QString getPolynomialVectorStr(const std::shared_ptr<Polynomial> p);
 };
 
 #endif // TRANSFERFUNCTION_H

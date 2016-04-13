@@ -8,7 +8,7 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-QT += webenginewidgets
+QT += webenginewidgets webchannel
 
 TARGET = CalcTF
 TEMPLATE = app
@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     tfdialog.cpp \
     transferfunction.cpp \
     controlsystem.cpp \
-    errorstrings.cpp
+    errorstrings.cpp \
+    outputdialog.cpp
 
 HEADERS  += mainwindow.h \
     Polynomial.h \
@@ -29,10 +30,15 @@ HEADERS  += mainwindow.h \
     tfdialog.h \
     transferfunction.h \
     controlsystem.h \
-    errorstrings.h
+    errorstrings.h \
+    outputdialog.h
 
 FORMS    += mainwindow.ui \
-    tfdialog.ui
+    tfdialog.ui \
+    outputdialog.ui
 
 RESOURCES += \
     calctfres.qrc
+
+DISTFILES += \
+    screen.html

@@ -12,13 +12,19 @@ TfDialog::TfDialog(QWidget *parent) :
 
     polyView = new QWebEngineView(this);
 
+    webchannel = new QWebChannel(polyView->page());
+
+    polyView->page()->setWebChannel(webchannel);
+
+    webchannel->registerObject(QStringLiteral("jshelper"), this);
+
     QHBoxLayout *hbox = new QHBoxLayout();
 
     hbox->addWidget(polyView);
 
     ui->gB_poly_browser->setLayout(hbox);
 
-    QString urlStr = QString("%0/%1").arg(QDir::currentPath(),
+    QString urlStr = QString("%0/%1").arg(qApp->applicationDirPath(),
                                           TfDialog::PATH_POLY_HTML);
 
     //Better to use qApp->applicationDirPath coz it gives the location of executable
@@ -31,6 +37,7 @@ TfDialog::TfDialog(QWidget *parent) :
 
 TfDialog::~TfDialog()
 {
+    webchannel->deregisterObject(this);
     delete ui;    
 }
 
@@ -42,7 +49,9 @@ std::shared_ptr<TransferFunction> TfDialog::tf() const
 void TfDialog::setTf(const std::shared_ptr<TransferFunction> &tf)
 {
     m_tf = tf;
-    clearUI();
+    ui->lineEdit_poleP->setText(m_tf->getPolesVectorStr());
+    ui->lineEdit_zeroP->setText(m_tf->getZeroVectorStr());
+    emit showEquation(m_tf->getTfEquation());
 }
 
 void TfDialog::on_buttonBox_accepted()
@@ -63,6 +72,7 @@ void TfDialog::on_lineEdit_zeroP_editingFinished()
     QString err;
     QString res = m_tf->setZerosPoly(zerosStr,&err);
     m_tf->dumpValue(" Dump Zero in on_lineEdit_zeroP_editingFinished()",m_tf->zerosPoly());
+    emit showEquation(m_tf->getTfEquation());
 
 //    if (err != "" ) ui->label_error->setText(err);
 //    ui->label_error->setText(m_tf->getTfEquation());
@@ -75,6 +85,7 @@ void TfDialog::on_lineEdit_poleP_editingFinished()
     QString err = "";
     QString res = m_tf->setPolesPoly(polesStr,&err);
     m_tf->dumpValue(" Dump Zero in on_lineEdit_poleP_editingFinished()",m_tf->zerosPoly());
+    emit showEquation(m_tf->getTfEquation());
 
 //    if (err != "" ) ui->label_error->setText(err);
 //    ui->label_error->setText(m_tf->getTfEquation());
