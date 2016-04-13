@@ -27,6 +27,12 @@ void ControlSystem::setPlantTF(const QString &zeroP, const QString &poleP)
 {
     m_plantTF = std::make_shared<TransferFunction>();
     m_plantTF->setTF(zeroP,poleP);
+    setCsTF(m_controllerTF,m_feedbackTF,m_plantTF);
+}
+
+std::shared_ptr<TransferFunction> ControlSystem::getCsTF()
+{
+    return m_csTF;
 }
 
 

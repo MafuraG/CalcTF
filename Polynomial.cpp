@@ -48,7 +48,7 @@ Polynomial::Polynomial()
   : m_degree(-1)
   , m_coefficient_vector_ptr(NULL)
 {
-    SetToScalar(0.0);
+    SetToScalar(1.0);
 }
 
 //======================================================================

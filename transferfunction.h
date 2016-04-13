@@ -44,6 +44,8 @@ public:
     void dumpValue(QString msg, const std::shared_ptr<Polynomial> &p);
 
     QString getTfEquation(const QString &plane="s");
+
+    bool isEmpty();
 private:
 
 
@@ -54,6 +56,7 @@ private:
 //    QString getPolynomialStr(const std::shared_ptr<Polynomial> p);
     QString getPolynomialEquation(const std::shared_ptr<Polynomial> p, const QString &plane);
     QString getPolynomialVectorStr(const std::shared_ptr<Polynomial> p);
+    void initTS();
 };
 
 #endif // TRANSFERFUNCTION_H

@@ -16,7 +16,7 @@ public:
 
 
 
-    TransferFunction *getCsTF() const;
+    std::shared_ptr<TransferFunction> getCsTF();
     std::shared_ptr<TransferFunction> getControlTF() const;
     std::shared_ptr<TransferFunction> getFeedbackTF() const;
     std::shared_ptr<TransferFunction> getPlantTF() const;
