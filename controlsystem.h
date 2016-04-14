@@ -2,6 +2,7 @@
 #define CONTROLSYSTEM_H
 
 #include "transferfunction.h"
+#include <memory>
 
 
 
@@ -21,6 +22,7 @@ public:
     std::shared_ptr<TransferFunction> getFeedbackTF() const;
     std::shared_ptr<TransferFunction> getPlantTF() const;
 
+    void updateCs();
 private:
 
     std::shared_ptr<TransferFunction> m_controllerTF;
@@ -28,7 +30,7 @@ private:
     std::shared_ptr<TransferFunction> m_plantTF;
     std::shared_ptr<TransferFunction> m_csTF; //by system I mean a feed back control system with plant, feedback and control transfer functions
 
-    void setCsTF(TransferFunction &cTF, const TransferFunction &fbTF, const TransferFunction &pTF);
+    void setCsTF(std::shared_ptr<TransferFunction> &cTF, std::shared_ptr<TransferFunction>  &fbTF, std::shared_ptr<TransferFunction> &pTF);
 };
 
 #endif // CONTROLSYSTEM_H

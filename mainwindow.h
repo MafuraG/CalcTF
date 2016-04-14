@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "controlsystem.h"
+#include "outputdialog.h"
 #include "tfdialog.h"
 
 #include <QMainWindow>
@@ -18,6 +19,11 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+signals:
+    void displayEquation();
+
+public slots:
+    void on_tfdialog_closed(bool status);
 
 private slots:
 
@@ -28,10 +34,13 @@ private slots:
 
     void on_toolButton_feedback_clicked();
 
+    void on_pushButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 
     TfDialog *tfdiag;
+    OutputDialog *outdialog;
     std::shared_ptr<ControlSystem> m_cs;
 
 };

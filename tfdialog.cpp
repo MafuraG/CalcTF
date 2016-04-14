@@ -49,6 +49,8 @@ std::shared_ptr<TransferFunction> TfDialog::tf() const
 void TfDialog::setTf(const std::shared_ptr<TransferFunction> &tf)
 {
     m_tf = tf;
+    m_tf_original = std::make_shared<TransferFunction>(tf.get());
+    //m_tf_original->setTF(tf->getZeroVectorStr());
     ui->lineEdit_poleP->setText(m_tf->getPolesVectorStr());
     ui->lineEdit_zeroP->setText(m_tf->getZeroVectorStr());
     emit showEquation(m_tf->getTfEquation());
@@ -61,6 +63,7 @@ void TfDialog::on_buttonBox_accepted()
 
 void TfDialog::on_buttonBox_rejected()
 {
+    m_tf = m_tf_original;
     emit tfDialogueClosed(false);
 }
 

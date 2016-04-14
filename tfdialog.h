@@ -29,6 +29,7 @@ public:
 signals:
     void tfDialogueClosed(bool);
     void showEquation(QString);
+
 private slots:
     void on_buttonBox_accepted();
 
@@ -41,6 +42,7 @@ private slots:
 private:
     Ui::TfDialog *ui;
     std::shared_ptr<TransferFunction> m_tf;
+    std::shared_ptr<TransferFunction> m_tf_original;
     QWebEngineView *polyView;
     QWebChannel *webchannel;
     void clearUI();

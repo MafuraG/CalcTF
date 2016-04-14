@@ -1,3 +1,4 @@
+#include "controlsystem.h"
 #include "outputdialog.h"
 #include "ui_outputdialog.h"
 
@@ -26,15 +27,17 @@ OutputDialog::OutputDialog(QWidget *parent) :
 
     //Better to use qApp->applicationDirPath coz it gives the location of executable
 
-    polyView->setUrl(urlStr);
+    polyView->setUrl(urlStr);    
+
 
 }
 
-QString OutputDialog::PATH_POLY_HTML="screen.html";
+QString OutputDialog::PATH_POLY_HTML="screen1.html";
 
 OutputDialog::~OutputDialog()
 {
     delete ui;
+    webchannel->deregisterObject(this);
 }
 
 std::shared_ptr<ControlSystem> OutputDialog::cs() const
@@ -45,4 +48,14 @@ std::shared_ptr<ControlSystem> OutputDialog::cs() const
 void OutputDialog::setCs(const std::shared_ptr<ControlSystem> &cs)
 {
     m_cs = cs;
+    displayEquation();
 }
+
+void OutputDialog::displayEquation(){
+    //auto ts = m_cs->getCsTF();
+    QString eq = m_cs->getCsTF()->getTfEquation();
+    qDebug()<<"Equation to display at output: "<< eq ;
+    emit showEquation( eq );
+}
+
+

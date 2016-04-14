@@ -4,6 +4,8 @@
 #include <QDialog>
 #include <QWebChannel>
 #include <QWebEngineView>
+#include <controlsystem.h>
+#include <memory>
 
 namespace Ui {
 class OutputDialog;
@@ -21,6 +23,9 @@ public:
     std::shared_ptr<ControlSystem> cs() const;
     void setCs(const std::shared_ptr<ControlSystem> &cs);
 
+public slots:
+    void displayEquation();
+
 signals:
     void showEquation(QString);
 
@@ -29,6 +34,8 @@ private:
     QWebEngineView *polyView;
     QWebChannel *webchannel;
     std::shared_ptr<ControlSystem> m_cs;
+
+
 };
 
 #endif // OUTPUTDIALOG_H

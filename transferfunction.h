@@ -12,7 +12,7 @@ class TransferFunction
 {
 public:
     TransferFunction();
-    TransferFunction(TransferFunction &tf0);
+    TransferFunction(TransferFunction *tf0);
     TransferFunction(const QString &zeroStr, const QString &poleStr);
     TransferFunction(const std::string &zeroStr, const std::string &poleStr);
 
@@ -54,8 +54,8 @@ private:
     QString setPolynomialFomStr(const QString &polyStr, std::shared_ptr<Polynomial> &p, QString *errString = nullptr);
     QString getPolynomialStr(QString &polyStr, const std::shared_ptr<Polynomial> p);
 //    QString getPolynomialStr(const std::shared_ptr<Polynomial> p);
-    QString getPolynomialEquation(const std::shared_ptr<Polynomial> p, const QString &plane);
-    QString getPolynomialVectorStr(const std::shared_ptr<Polynomial> p);
+    QString getPolynomialEquation(const std::shared_ptr<Polynomial> &p, const QString &plane);
+    QString getPolynomialVectorStr(const std::shared_ptr<Polynomial> &p);
     void initTS();
 };
 
