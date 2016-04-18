@@ -28,7 +28,8 @@ void MainWindow::on_tfdialog_closed(bool status)
     if (status){
         //update cs
         m_cs->updateCs();
-        emit displayEquation();
+        //qDebug()<<"Display Equation signal to be called";
+        emit displayEquation(m_cs->getCsTF()->getTfEquation());
     }
 }
 

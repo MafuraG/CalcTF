@@ -3,6 +3,7 @@
 
 #include "transferfunction.h"
 #include <memory>
+#include "roottablemodel.h"
 
 
 
@@ -30,6 +31,7 @@ private:
     std::shared_ptr<TransferFunction> m_plantTF;
     std::shared_ptr<TransferFunction> m_csTF; //by system I mean a feed back control system with plant, feedback and control transfer functions
 
+    RootTableModel *m_rootTModel;
     void setCsTF(std::shared_ptr<TransferFunction> &cTF, std::shared_ptr<TransferFunction>  &fbTF, std::shared_ptr<TransferFunction> &pTF);
 };
 

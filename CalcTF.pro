@@ -22,7 +22,9 @@ SOURCES += main.cpp\
     transferfunction.cpp \
     controlsystem.cpp \
     errorstrings.cpp \
-    outputdialog.cpp
+    outputdialog.cpp \
+    root.cpp \
+    roottablemodel.cpp
 
 HEADERS  += mainwindow.h \
     Polynomial.h \
@@ -31,7 +33,9 @@ HEADERS  += mainwindow.h \
     transferfunction.h \
     controlsystem.h \
     errorstrings.h \
-    outputdialog.h
+    outputdialog.h \
+    root.h \
+    roottablemodel.h
 
 FORMS    += mainwindow.ui \
     tfdialog.ui \

@@ -9,13 +9,28 @@
 
 TransferFunction::TransferFunction()
 {    
-   initTS();
+    initTS();
+}
+
+TransferFunction::TransferFunction(double scalar)
+{
+    initTS();
+    setZerosPoly(QString("%0").arg(scalar));
 }
 
 TransferFunction::TransferFunction(TransferFunction *tf0 )
 {
     initTS();
     setTF(tf0->getZeroVectorStr(),tf0->getPolesVectorStr());
+}
+
+TransferFunction::TransferFunction(const Polynomial &zeroP, const Polynomial &poleP)
+{
+    QString zeroStr = getPolynomialVectorStr(zeroP);
+    QString poleStr = getPolynomialVectorStr(poleP);
+
+    initTS();
+    setTF(zeroStr,poleStr);
 }
 
 TransferFunction::TransferFunction(const QString &zeroStr, const QString &poleStr)
@@ -42,120 +57,73 @@ void TransferFunction::setTF(const QString &zeroStr, const QString &poleStr)
     setPolesPoly(poleStr);
 }
 
-TransferFunction& TransferFunction::operator *(const TransferFunction &tr0)
+TransferFunction operator *(const TransferFunction &tr0, const TransferFunction &tr1)
 {
 
     auto tr0_p = tr0.polesPoly();
     auto tr0_z = tr0.zerosPoly();
 
-    //incase tr0 is empty then return this
-//    if (tr0.isEmpty()){
-//        return (*this);
-//    }
+    auto tr1_p = tr1.polesPoly();
+    auto tr1_z = tr1.zerosPoly();
 
-    Polynomial res_z = (*tr0_z) * (*(this->m_zerosPoly)) ;
-    Polynomial res_p = (*tr0_p) * (*(this->m_polesPoly)) ;
+    Polynomial res_z = (*tr0_z) * (*tr1_z) ;
+    Polynomial res_p = (*tr0_p) * (*tr1_p) ;
 
-    this->m_zerosPoly = std::make_shared<Polynomial>(res_z);
-    this->m_polesPoly = std::make_shared<Polynomial>(res_p);
+    TransferFunction res(res_z,res_p);
 
-    return (*this);
+    return res;
 
 }
 
-TransferFunction &TransferFunction::operator /(const TransferFunction &tr0)
+TransferFunction operator /(const TransferFunction &tr0, const TransferFunction &tr1)
 {
     auto tr0_p = tr0.polesPoly();
     auto tr0_z = tr0.zerosPoly();
 
-    //incase tr0 is empty then return this
-//    if (tr0.isEmpty()){
-//        return (*this);
-//    }
+    auto tr1_p = tr1.polesPoly();
+    auto tr1_z = tr1.zerosPoly();
 
-    Polynomial res_z = (*tr0_z) * (*(this->m_polesPoly)) ;
-    Polynomial res_p = (*tr0_p) * (*(this->m_zerosPoly));
+    Polynomial res_z = (*tr0_z) * (*tr1_p) ;
+    Polynomial res_p = (*tr0_p) * (*tr1_z) ;
 
-    this->m_zerosPoly = std::make_shared<Polynomial>(res_z);
-    this->m_polesPoly = std::make_shared<Polynomial>(res_p);
+    TransferFunction res(res_z,res_p);
 
-    return (*this);
+    return res;
+
 }
 
-TransferFunction& TransferFunction::operator -(const TransferFunction &tr0)
+TransferFunction operator -(const TransferFunction &tr0, const TransferFunction &tr1)
 {
     auto tr0_p = tr0.polesPoly();
     auto tr0_z = tr0.zerosPoly();
 
-    //incase tr0 is empty then return this
-//    if (tr0.isEmpty()){
-//        return (*this);
-//    }
+    auto tr1_p = tr1.polesPoly();
+    auto tr1_z = tr1.zerosPoly();
 
-    Polynomial res_z = (*(this->m_zerosPoly)) - (*tr0_z);
-    Polynomial res_p = (*(this->m_polesPoly)) - (*tr0_p);
+    Polynomial res_z = ((*tr0_z) * (*tr1_p)) - ((*tr1_z)*(*tr0_p));
+    Polynomial res_p = (*tr0_p) * (*tr1_p) ;
 
-    this->m_zerosPoly = std::make_shared<Polynomial>(res_z);
-    this->m_polesPoly = std::make_shared<Polynomial>(res_p);
+    TransferFunction res(res_z,res_p);
 
-    return (*this);
+    return res;
 }
 
-TransferFunction& TransferFunction::operator +(const TransferFunction &tr0)
+TransferFunction operator +(const TransferFunction &tr0, const TransferFunction &tr1)
 {
     auto tr0_p = tr0.polesPoly();
     auto tr0_z = tr0.zerosPoly();
 
-    //incase tr0 is empty then return this
-//    if (tr0.isEmpty()){
-//        return (*this);
-//    }
+    auto tr1_p = tr1.polesPoly();
+    auto tr1_z = tr1.zerosPoly();
 
-    Polynomial res_z = (*(this->m_zerosPoly)) + (*tr0_z);
-    Polynomial res_p = (*(this->m_polesPoly)) + (*tr0_p);
+    Polynomial res_z = ((*tr0_z) * (*tr1_p)) + ((*tr1_z)*(*tr0_p));
+    Polynomial res_p = (*tr0_p) * (*tr1_p) ;
 
-    this->m_zerosPoly = std::make_shared<Polynomial>(res_z);
-    this->m_polesPoly = std::make_shared<Polynomial>(res_p);
+    TransferFunction res(res_z,res_p);
 
-    return (*this);
+    return res;
 }
 
-TransferFunction &TransferFunction::operator *(const double scalar)
-{
-    Polynomial res_z = (*(this->m_zerosPoly)) * scalar;
-
-    this->m_zerosPoly = std::make_shared<Polynomial>(res_z);
-
-    return (*this);
-}
-
-TransferFunction &TransferFunction::operator /(const double scalar)
-{
-    Polynomial res_p = (*(this->m_polesPoly)) * scalar;
-
-    this->m_polesPoly = std::make_shared<Polynomial>(res_p);
-
-    return (*this);
-}
-
-TransferFunction &TransferFunction::operator + (const double scalar)
-{
-
-    Polynomial res_z = scalar * (*(this->m_polesPoly)) + (*(this->m_zerosPoly)) ;
-
-    this->m_zerosPoly = std::make_shared<Polynomial>(res_z);
-
-    return (*this);
-}
-
-TransferFunction &TransferFunction::operator -(const double scalar)
-{
-    Polynomial res_z = scalar * (*(this->m_polesPoly)) - (*(this->m_zerosPoly)) ;
-
-    this->m_zerosPoly = std::make_shared<Polynomial>(res_z);
-
-    return (*this);
-}
 
 std::shared_ptr<Polynomial> TransferFunction::zerosPoly() const
 {
@@ -199,22 +167,6 @@ QString TransferFunction::setPolesPoly(const QString &polyStr,QString *errString
     return res;
 }
 
-//QString TransferFunction::getPolesStr()
-//{
-//    auto p = m_polesPoly;
-//    QString pStr;
-//    getPolynomialStr(pStr,p);
-//    return pStr;
-//}
-
-//QString TransferFunction::getZeroStr()
-//{
-//    auto p = m_zerosPoly;
-//    QString pStr;
-//    getPolynomialStr(pStr,p);
-//    return pStr;
-//}
-
 QString TransferFunction::getPolesVectorStr()
 {
     auto p = m_polesPoly;
@@ -250,7 +202,7 @@ QString TransferFunction::setPolynomialFomStr(const QString &polyStr, std::share
             pass = false;
         }
     }
-    if (!pass) {
+    if (!pass && errString != nullptr) {
         return (*errString);
     }
 
@@ -293,29 +245,48 @@ QString TransferFunction::setPolynomialFomStr(const QString &polyStr, std::share
 QString TransferFunction::getPolynomialEquation(const std::shared_ptr<Polynomial> &p, const QString &plane)
 {
     QString polyStr = "(";
+    QStringList terms;
 
     if (p->Degree() == 0) return QString("%0").arg((*p)[0]);
     for(int i = p->Degree() ; i >= 0 ; i--){
        double c = (*p)[i];
-       QString term = QString("%0*%1^%2").arg(c)
-               .arg(plane)
-               .arg(i);
+       QString term;
 
-       if (i > 1) {
-           polyStr += term + " + " ;
+       if (c == 0) {
+           term = "0";
        }else{
-           if (i == 1){
-               term = QString("%0*%1").arg(c).arg(plane);
-               polyStr += term + " + " ;
+        //c not equal to zero
+           if (c == 1 ){
+               //c equals 1 and i > 1  s^2, s^3, s^4
+               if (i > 1){
+                    term = QString("%0^%1").arg(plane).arg(i);
+               }
+               if (i == 1){
+                   term = QString("%0").arg(plane);
+               }
+               if (i == 0){
+                   term = QString("%0").arg("1");
+               }
+           }else{
+               if (i > 1){
+                    term = QString("%0*%1^%2").arg(c).arg(plane).arg(i);
+               }
+               if (i == 1){
+                   term = QString("%0*%1").arg(c).arg(plane);
+               }
+               if (i == 0){
+                   term = QString("%0").arg(c);
+               }
            }
-           else{
-               term = QString("%0").arg(c);
-               polyStr += term;
-           }
-
        }
 
+       if (c > 0 && i != p->Degree()){
+           term = QString("+%0").arg(term);
+       }
+
+       polyStr += term;
     }
+
     polyStr += ") ";
 
     return polyStr;
@@ -323,12 +294,17 @@ QString TransferFunction::getPolynomialEquation(const std::shared_ptr<Polynomial
 
 QString TransferFunction::getPolynomialVectorStr(const std::shared_ptr<Polynomial> &p)
 {
+    return getPolynomialVectorStr(*p);
+}
+
+QString TransferFunction::getPolynomialVectorStr(const Polynomial &p)
+{
     //return string with coeficients in ascending order
     QString polystr="";
-    if (p->Degree() == -1) return "";
-    if (p->Degree() == 0) return QString("%0").arg((*p)[0]);
-    for (int i = 0 ; i <= p->Degree(); i++){
-        double c = (*p)[i];
+    if (p.Degree() == -1) return "";
+    if (p.Degree() == 0) return QString("%0").arg(p[0]);
+    for (int i = 0 ; i <= p.Degree(); i++){
+        double c = p[i];
         QString term = QString("%0").arg(c);
 
         polystr += term + " ";
@@ -348,6 +324,18 @@ QString TransferFunction::getTfEquation(const QString &plane)
                                               .arg(zeroStr)
                                               .arg(poleStr);
     return tf_eq;
+}
+
+QList<std::shared_ptr<Root> > TransferFunction::getRootsClosedLoop()
+{
+    Polynomial D = *m_polesPoly;
+    Polynomial N = *m_zerosPoly;
+
+    Polynomial R = N + D;
+
+    std::vector<double> real_ptr
+
+    R.FindRoots();
 }
 
 bool TransferFunction::isEmpty()

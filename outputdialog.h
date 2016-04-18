@@ -24,18 +24,18 @@ public:
     void setCs(const std::shared_ptr<ControlSystem> &cs);
 
 public slots:
-    void displayEquation();
+    void displayEquation(QString equation);
 
 signals:
     void showEquation(QString);
+
+private slots:
 
 private:
     Ui::OutputDialog *ui;
     QWebEngineView *polyView;
     QWebChannel *webchannel;
     std::shared_ptr<ControlSystem> m_cs;
-
-
 };
 
 #endif // OUTPUTDIALOG_H

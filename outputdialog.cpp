@@ -47,15 +47,16 @@ std::shared_ptr<ControlSystem> OutputDialog::cs() const
 
 void OutputDialog::setCs(const std::shared_ptr<ControlSystem> &cs)
 {
-    m_cs = cs;
-    displayEquation();
+    m_cs = cs;    
 }
 
-void OutputDialog::displayEquation(){
+void OutputDialog::displayEquation(QString equation){
     //auto ts = m_cs->getCsTF();
-    QString eq = m_cs->getCsTF()->getTfEquation();
-    qDebug()<<"Equation to display at output: "<< eq ;
-    emit showEquation( eq );
+    //QString eq = m_cs->getCsTF()->getTfEquation();
+    //qDebug()<<"Equation to display at output: "<< eq ;
+    //if (!this->isHidden())
+    emit showEquation( equation );
 }
+
 
 

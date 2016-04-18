@@ -12,20 +12,13 @@ class TransferFunction
 {
 public:
     TransferFunction();
+    TransferFunction(double scalar);
     TransferFunction(TransferFunction *tf0);
+    TransferFunction(const Polynomial &zeroP, const Polynomial &poleP);
     TransferFunction(const QString &zeroStr, const QString &poleStr);
     TransferFunction(const std::string &zeroStr, const std::string &poleStr);
 
-    void setTF(const QString &zeroStr, const QString &poleStr);
-    TransferFunction& operator *(const TransferFunction &tr0);    
-    TransferFunction& operator /(const TransferFunction &tr0);
-    TransferFunction& operator -(const TransferFunction &tr0);
-    TransferFunction& operator +(const TransferFunction &tr0);
-
-    TransferFunction& operator *(const double scalar);
-    TransferFunction& operator /(const double scalar);
-    TransferFunction& operator -(const double scalar);
-    TransferFunction& operator +(const double scalar);
+    void setTF(const QString &zeroStr, const QString &poleStr);    
 
     QString setZerosPoly(const QString &polyStr,QString *errString = nullptr);
     QString setPolesPoly(const QString &polyStr,QString *errString = nullptr);
@@ -44,6 +37,7 @@ public:
     void dumpValue(QString msg, const std::shared_ptr<Polynomial> &p);
 
     QString getTfEquation(const QString &plane="s");
+    QList<std::shared_ptr<Root>> getRootsClosedLoop();
 
     bool isEmpty();
 private:
@@ -56,7 +50,14 @@ private:
 //    QString getPolynomialStr(const std::shared_ptr<Polynomial> p);
     QString getPolynomialEquation(const std::shared_ptr<Polynomial> &p, const QString &plane);
     QString getPolynomialVectorStr(const std::shared_ptr<Polynomial> &p);
+    QString getPolynomialVectorStr(const Polynomial &p);
     void initTS();
 };
+
+TransferFunction operator *(const TransferFunction &tr0, const TransferFunction &tr1);
+TransferFunction operator /(const TransferFunction &tr0, const TransferFunction &tr1);
+TransferFunction operator +(const TransferFunction &tr0, const TransferFunction &tr1);
+TransferFunction operator -(const TransferFunction &tr0, const TransferFunction &tr1);
+
 
 #endif // TRANSFERFUNCTION_H

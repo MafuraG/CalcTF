@@ -5,6 +5,8 @@ ControlSystem::ControlSystem()
     m_controllerTF = std::make_shared<TransferFunction>();
     m_feedbackTF = std::make_shared<TransferFunction>();
     m_plantTF = std::make_shared<TransferFunction>();
+    m_rootTModel = new RootTableModel();
+
     updateCs();
 }
 
@@ -43,7 +45,12 @@ void ControlSystem::updateCs()
     setCsTF(m_controllerTF,m_feedbackTF,m_plantTF);
 }
 
+void ControlSystem::updateRootTable()
+{
+    m_rootTModel->removeRows(0,m_rootTModel->rowCount());
 
+    //m_csTF->get
+}
 
 std::shared_ptr<TransferFunction> ControlSystem::getControlTF() const
 {
@@ -69,17 +76,16 @@ void ControlSystem::setCsTF(std::shared_ptr<TransferFunction> &cTF, std::shared_
 
     //auto res = (((ctf * ptf) * -1) / (ctf * ptf * ftf)) + 1 ;
     auto res1 = ctf * ptf ;
-    res1 = res1 ;
+
 
     auto res2 =  ctf * ptf * ftf;
-    res2 = res2 * - 1;
-    res2 = res2 + 1 ;
+    res2 = TransferFunction(1) - res2;
 
-    res1 = res1 / res2 ;
+    auto res = res1 / res2 ;
     //auto res = TransferFunction(pTF->getZeroVectorStr(),pTF->getPolesVectorStr());
 
     m_csTF = std::make_shared<TransferFunction>();
-    m_csTF->setTF(res1.getZeroVectorStr(),res1.getPolesVectorStr());
+    m_csTF->setTF(res.getZeroVectorStr(),res.getPolesVectorStr());
 }
 
 

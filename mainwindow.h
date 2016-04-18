@@ -20,7 +20,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 signals:
-    void displayEquation();
+    void displayEquation(QString equation);
 
 public slots:
     void on_tfdialog_closed(bool status);
