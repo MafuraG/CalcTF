@@ -250,7 +250,7 @@ QString TransferFunction::setPolynomialFomStr(const QString &polyStr, std::share
             pass = false;
         }
     }
-    if (!pass) {
+    if (!pass && errString != nullptr) {
         return (*errString);
     }
 
@@ -297,22 +297,31 @@ QString TransferFunction::getPolynomialEquation(const std::shared_ptr<Polynomial
     if (p->Degree() == 0) return QString("%0").arg((*p)[0]);
     for(int i = p->Degree() ; i >= 0 ; i--){
        double c = (*p)[i];
-       QString term = QString("%0*%1^%2").arg(c)
-               .arg(plane)
-               .arg(i);
+       double c_next = (*p)[i+1];
+       if (c == 0) {
+           continue;
+       }
+       else{
+           QString term = QString("%0*%1^%2").arg(c)
+                   .arg(plane)
+                   .arg(i);
 
-       if (i > 1) {
-           polyStr += term + " + " ;
-       }else{
-           if (i == 1){
-               term = QString("%0*%1").arg(c).arg(plane);
+           if (i > 1 ) {
                polyStr += term + " + " ;
+           }else{
+               if (i == 1){
+                   term = QString("%0*%1").arg(c).arg(plane);
+                   if (c_next != 0)  polyStr += term + " + " ;
+                   else{
+                       polyStr += term ;
+                       break;
+                   }
+               }
+               else{
+                   term = QString("%0").arg(c);
+                   polyStr += term;
+               }
            }
-           else{
-               term = QString("%0").arg(c);
-               polyStr += term;
-           }
-
        }
 
     }
