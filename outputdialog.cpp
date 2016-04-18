@@ -47,7 +47,9 @@ std::shared_ptr<ControlSystem> OutputDialog::cs() const
 
 void OutputDialog::setCs(const std::shared_ptr<ControlSystem> &cs)
 {
-    m_cs = cs;    
+    m_cs = cs;
+    ui->tableView_roots->setModel(m_cs->getRootTModel());
+    m_cs->updateRootTable();
 }
 
 void OutputDialog::displayEquation(QString equation){

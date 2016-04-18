@@ -2,7 +2,9 @@
 #define TRANSFERFUNCTION_H
 
 #include "Polynomial.h"
+#include "root.h"
 
+#include <QList>
 #include <QString>
 #include <memory>
 

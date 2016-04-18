@@ -1,6 +1,7 @@
 #include "transferfunction.h"
 #include "Polynomial.h"
 #include "errorstrings.h"
+#include "root.h"
 
 #include <QList>
 #include <QStringBuilder>
@@ -333,9 +334,23 @@ QList<std::shared_ptr<Root> > TransferFunction::getRootsClosedLoop()
 
     Polynomial R = N + D;
 
-    std::vector<double> real_ptr
+    QVector<double> real_vect;
+    QVector<double>imag_vect;
 
-    R.FindRoots();
+    real_vect.reserve(R.Degree());
+    imag_vect.reserve(R.Degree());
+
+    int num_of_roots = 0;
+
+    R.FindRoots(&real_vect[0],&imag_vect[0],&num_of_roots);
+
+    QList<std::shared_ptr<Root>> rList;
+    for(int i = 0 ; i < num_of_roots; i++){
+        auto r = std::make_shared<Root>(real_vect[i],imag_vect[i]);
+        rList.append(r);
+    }
+
+    return rList;
 }
 
 bool TransferFunction::isEmpty()

@@ -9,6 +9,7 @@
 
 class RootTableModel : public QAbstractTableModel
 {
+    Q_OBJECT
 public:
     RootTableModel();
 
@@ -25,12 +26,12 @@ public:
 
     Root * getRoot(const int row);
 
-    QList<Root> getRootList() const;
+    QList<Root> getRootList();
 
     void newRoot();
     void removeRoot(const int row);
 
-    static int COLUMNCOUNT = 2 ;
+    const int COLUMNCOUNT ;
 
 private:
     Root * getItem(const QModelIndex &index);

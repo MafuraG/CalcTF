@@ -11,6 +11,7 @@ class Root
 {
 public:
     Root();
+    Root(const double real, const double imag);
     static QString EntityName;
     static QString D_Real;
     static QString D_Imaginay;
@@ -22,12 +23,12 @@ public:
     void setImaginary(double imaginary);
 
     QVariant data(const int row) const;
-    void setData(const int col, QVariant value);
+    void setData(const int row, QVariant value);
 
     static QVariant header(int col);
 
 private:
-    static int ROOTSIZE = 2;
+    static int ROOTSIZE;
     QVector<double> m_rootVect = QVector<double>(ROOTSIZE);
 };
 

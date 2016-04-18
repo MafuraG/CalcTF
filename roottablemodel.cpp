@@ -94,7 +94,7 @@ Root *RootTableModel::getRoot(const int row)
     return nullptr;
 }
 
-QList<Root> RootTableModel::getRootList() const
+QList<Root> RootTableModel::getRootList()
 {
     return m_rootList;
 }
@@ -118,3 +118,5 @@ Root *RootTableModel::getItem(const QModelIndex &index)
     }
     return new Root();
 }
+
+int RootTableModel::COLUMNCOUNT = 2;

@@ -24,6 +24,9 @@ public:
     std::shared_ptr<TransferFunction> getPlantTF() const;
 
     void updateCs();
+    RootTableModel *getRootTModel() const;
+
+    void updateRootTable();
 private:
 
     std::shared_ptr<TransferFunction> m_controllerTF;

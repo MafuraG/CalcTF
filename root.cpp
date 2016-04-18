@@ -5,6 +5,12 @@ Root::Root()
 
 }
 
+Root::Root(double real, double imag)
+{
+    setReal(real);
+    setImaginary(imag);
+}
+
 double Root::real() const
 {
     return m_rootVect[0];
@@ -34,7 +40,7 @@ QVariant Root::data(const int row) const
         return QVariant();
 }
 
-void Root::setData(const int col, QVariant value)
+void Root::setData(const int row, QVariant value)
 {
     if (row >= 0 && row < ROOTSIZE)
     {
@@ -64,3 +70,4 @@ QVariant Root::header(int col)
 QString Root::D_Imaginay = "Мнимая часть";
 QString Root::D_Real = "Действительная часть";
 QString Root::EntityName = "Root";
+int Root::ROOTSIZE = 2;
