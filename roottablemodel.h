@@ -26,15 +26,15 @@ public:
 
     Root * getRoot(const int row);
 
-    QList<Root> getRootList();
+    QList<Root *> getRootList();
 
     void newRoot();
     void removeRoot(const int row);
 
-    const int COLUMNCOUNT ;
+    const int COLUMNCOUNT = 2;
 
 private:
-    Root * getItem(const QModelIndex &index);
+    Root * getItem(const QModelIndex &index) const;
     QList<Root*> m_rootList;
 };
 

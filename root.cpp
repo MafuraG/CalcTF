@@ -35,17 +35,20 @@ QVariant Root::data(const int row) const
 {
     if (row >= 0 && row < ROOTSIZE)
     {
-        return m_rootVect[row];
+        return QVariant(m_rootVect[row]);
     }else
         return QVariant();
 }
 
-void Root::setData(const int row, QVariant value)
+bool Root::setData(const int row, QVariant value)
 {
     if (row >= 0 && row < ROOTSIZE)
     {
         m_rootVect[row] = value.toDouble();
+        return true;
     }
+
+    return false;
 }
 
 QVariant Root::header(int col)

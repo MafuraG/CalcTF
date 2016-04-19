@@ -1,5 +1,6 @@
 #include "roottablemodel.h"
 
+
 RootTableModel::RootTableModel()
 {
     insertRow(rowCount());
@@ -12,7 +13,7 @@ int RootTableModel::rowCount(const QModelIndex &parent) const
 
 int RootTableModel::columnCount(const QModelIndex &parent) const
 {
-    return COLUMNCOUNT;
+    return RootTableModel::COLUMNCOUNT;
 }
 
 QVariant RootTableModel::data(const QModelIndex &index, int role) const
@@ -94,7 +95,7 @@ Root *RootTableModel::getRoot(const int row)
     return nullptr;
 }
 
-QList<Root> RootTableModel::getRootList()
+QList<Root*> RootTableModel::getRootList()
 {
     return m_rootList;
 }
@@ -109,7 +110,7 @@ void RootTableModel::removeRoot(const int row)
     removeRows(row,1);
 }
 
-Root *RootTableModel::getItem(const QModelIndex &index)
+Root * RootTableModel::getItem(const QModelIndex &index) const
 {
     if (index.isValid()) {
         Root *item = m_rootList[index.row()];
@@ -119,4 +120,6 @@ Root *RootTableModel::getItem(const QModelIndex &index)
     return new Root();
 }
 
-int RootTableModel::COLUMNCOUNT = 2;
+//int RootTableModel::COLUMNCOUNT = 2;
+
+

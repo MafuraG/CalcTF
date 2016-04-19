@@ -23,7 +23,7 @@ public:
     void setImaginary(double imaginary);
 
     QVariant data(const int row) const;
-    void setData(const int row, QVariant value);
+    bool setData(const int row, QVariant value);
 
     static QVariant header(int col);
 
