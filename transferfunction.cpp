@@ -331,20 +331,23 @@ QList<std::shared_ptr<Root> > TransferFunction::getRootsClosedLoop()
 {
     Polynomial D = *m_polesPoly;
     Polynomial N = *m_zerosPoly;
+    QList<std::shared_ptr<Root>> rList;
 
     Polynomial R = N + D;
 
     QVector<double> real_vect;
     QVector<double>imag_vect;
 
-    real_vect.reserve(R.Degree());
-    imag_vect.reserve(R.Degree());
+    real_vect.resize(R.Degree());
+    imag_vect.resize(R.Degree());
 
     int num_of_roots = 0;
 
+    if (R.Degree() == 0) return rList;
+
     R.FindRoots(&real_vect[0],&imag_vect[0],&num_of_roots);
 
-    QList<std::shared_ptr<Root>> rList;
+
     for(int i = 0 ; i < num_of_roots; i++){
         auto r = std::make_shared<Root>(real_vect[i],imag_vect[i]);
         rList.append(r);
