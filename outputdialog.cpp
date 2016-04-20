@@ -14,7 +14,9 @@ OutputDialog::OutputDialog(QWidget *parent) :
 
     polyView->page()->setWebChannel(webchannel);
 
-    webchannel->registerObject(QStringLiteral("jshelper"), this);
+    jshelper = new JsHelper();
+
+    webchannel->registerObject(QStringLiteral("jshelper"), jshelper);
 
     QHBoxLayout *hbox = new QHBoxLayout();
 
@@ -37,7 +39,7 @@ QString OutputDialog::PATH_POLY_HTML="screen1.html";
 OutputDialog::~OutputDialog()
 {
     delete ui;
-    webchannel->deregisterObject(this);
+    webchannel->deregisterObject(jshelper);
 }
 
 std::shared_ptr<ControlSystem> OutputDialog::cs() const
@@ -47,9 +49,11 @@ std::shared_ptr<ControlSystem> OutputDialog::cs() const
 
 void OutputDialog::setCs(const std::shared_ptr<ControlSystem> &cs)
 {
-    m_cs = cs;
+    m_cs = cs;    
     ui->tableView_roots->setModel(m_cs->getRootTModel());
+    m_cs->simplifyCS();
     m_cs->updateRootTable();
+    displayEquation(m_cs->getCsTF()->getTfEquation());
 }
 
 void OutputDialog::displayEquation(QString equation){
@@ -57,7 +61,7 @@ void OutputDialog::displayEquation(QString equation){
     //QString eq = m_cs->getCsTF()->getTfEquation();
     //qDebug()<<"Equation to display at output: "<< eq ;
     //if (!this->isHidden())
-    emit showEquation( equation );
+    jshelper->displayEquation(equation);
 }
 
 

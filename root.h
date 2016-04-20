@@ -25,11 +25,20 @@ public:
     QVariant data(const int row) const;
     bool setData(const int row, QVariant value);
 
+    bool isEqualTo(Root &rhs);
+
     static QVariant header(int col);
 
 private:
     static int ROOTSIZE;
     QVector<double> m_rootVect = QVector<double>(ROOTSIZE);
 };
+
+inline bool operator==(const Root& lhs, const Root& rhs){
+    /* do actual comparison */
+    if (lhs.real() == rhs.real() && lhs.imaginary() == rhs.imaginary())
+        return true;
+    return false;
+}
 
 #endif // ROOT_H

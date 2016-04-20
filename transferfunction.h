@@ -42,6 +42,7 @@ public:
     QList<std::shared_ptr<Root>> getRootsClosedLoop();
 
     bool isEmpty();
+    void simplifyTF();
 private:
 
 
@@ -52,8 +53,9 @@ private:
 //    QString getPolynomialStr(const std::shared_ptr<Polynomial> p);
     QString getPolynomialEquation(const std::shared_ptr<Polynomial> &p, const QString &plane);
     QString getPolynomialVectorStr(const std::shared_ptr<Polynomial> &p);
-    QString getPolynomialVectorStr(const Polynomial &p);
+    QString getPolynomialVectorStr(const Polynomial &p);    
     void initTS();
+    double getRootAt(QVector<double> &vect, int i);
 };
 
 TransferFunction operator *(const TransferFunction &tr0, const TransferFunction &tr1);

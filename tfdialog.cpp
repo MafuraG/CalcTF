@@ -16,7 +16,9 @@ TfDialog::TfDialog(QWidget *parent) :
 
     polyView->page()->setWebChannel(webchannel);
 
-    webchannel->registerObject(QStringLiteral("jshelper"), this);
+    jshelper = new JsHelper();
+
+    webchannel->registerObject(QStringLiteral("jshelper"), jshelper);
 
     QHBoxLayout *hbox = new QHBoxLayout();
 
@@ -37,7 +39,7 @@ TfDialog::TfDialog(QWidget *parent) :
 
 TfDialog::~TfDialog()
 {
-    webchannel->deregisterObject(this);
+    webchannel->deregisterObject(jshelper);
     delete ui;    
 }
 
@@ -53,7 +55,7 @@ void TfDialog::setTf(const std::shared_ptr<TransferFunction> &tf)
     //m_tf_original->setTF(tf->getZeroVectorStr());
     ui->lineEdit_poleP->setText(m_tf->getPolesVectorStr());
     ui->lineEdit_zeroP->setText(m_tf->getZeroVectorStr());
-    emit showEquation(m_tf->getTfEquation());
+    jshelper->displayEquation(m_tf->getTfEquation());
 }
 
 void TfDialog::on_buttonBox_accepted()
@@ -75,7 +77,7 @@ void TfDialog::on_lineEdit_zeroP_editingFinished()
     QString err;
     QString res = m_tf->setZerosPoly(zerosStr,&err);
     m_tf->dumpValue(" Dump Zero in on_lineEdit_zeroP_editingFinished()",m_tf->zerosPoly());
-    emit showEquation(m_tf->getTfEquation());
+    jshelper->displayEquation(m_tf->getTfEquation());
 
 //    if (err != "" ) ui->label_error->setText(err);
 //    ui->label_error->setText(m_tf->getTfEquation());
@@ -88,7 +90,7 @@ void TfDialog::on_lineEdit_poleP_editingFinished()
     QString err = "";
     QString res = m_tf->setPolesPoly(polesStr,&err);
     m_tf->dumpValue(" Dump Zero in on_lineEdit_poleP_editingFinished()",m_tf->zerosPoly());
-    emit showEquation(m_tf->getTfEquation());
+    jshelper->displayEquation(m_tf->getTfEquation());
 
 //    if (err != "" ) ui->label_error->setText(err);
 //    ui->label_error->setText(m_tf->getTfEquation());

@@ -17,6 +17,7 @@ TransferFunction::TransferFunction(double scalar)
 {
     initTS();
     setZerosPoly(QString("%0").arg(scalar));
+    setPolesPoly(QString("%0").arg(scalar));
 }
 
 TransferFunction::TransferFunction(TransferFunction *tf0 )
@@ -51,6 +52,7 @@ void TransferFunction::initTS()
     m_zerosPoly = std::make_shared<Polynomial>();
     m_polesPoly = std::make_shared<Polynomial>();
 }
+
 
 void TransferFunction::setTF(const QString &zeroStr, const QString &poleStr)
 {
@@ -134,6 +136,7 @@ std::shared_ptr<Polynomial> TransferFunction::zerosPoly() const
 void TransferFunction::setZerosPoly(std::shared_ptr<Polynomial> &zerosPoly)
 {
     m_zerosPoly = zerosPoly;
+    //simplifyTF();
 }
 
 QString TransferFunction::setZerosPoly(const QString &polyStr,QString *errString)
@@ -144,6 +147,8 @@ QString TransferFunction::setZerosPoly(const QString &polyStr,QString *errString
     //qDebug()<<" =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=";
     //dumpValue(QString("In function setZeroPoly AFTER edit"),p);
     m_zerosPoly = p ;
+    //simplify polynomial
+    //simplifyTF();
     return res;
 }
 
@@ -155,6 +160,7 @@ std::shared_ptr<Polynomial> TransferFunction::polesPoly() const
 void TransferFunction::setPolesPoly(std::shared_ptr<Polynomial> &polesPoly)
 {
     m_polesPoly = polesPoly;
+    //simplifyTF();
 }
 
 QString TransferFunction::setPolesPoly(const QString &polyStr,QString *errString)
@@ -165,6 +171,7 @@ QString TransferFunction::setPolesPoly(const QString &polyStr,QString *errString
     //qDebug()<<" =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= \n";
     //dumpValue(QString("In function setPolesPoly AFTER edit"),p);
     m_polesPoly = p;
+    //simplifyTF();
     return res;
 }
 
@@ -254,7 +261,7 @@ QString TransferFunction::getPolynomialEquation(const std::shared_ptr<Polynomial
        QString term;
 
        if (c == 0) {
-           term = "0";
+           continue;
        }else{
         //c not equal to zero
            if (c == 1 ){
@@ -313,10 +320,86 @@ QString TransferFunction::getPolynomialVectorStr(const Polynomial &p)
     return polystr;
 }
 
+void TransferFunction::simplifyTF()
+{
+    QVector<double> z_real_v;
+    QVector<double> z_imag_v;
+
+    QVector<double> p_real_v;
+    QVector<double> p_imag_v;
+
+    Polynomial p = *m_polesPoly;
+    Polynomial z = *m_zerosPoly;
+
+    if (p.Degree() == 0 || z.Degree() == 0) return;
+
+    z_real_v.resize(z.Degree());
+    z_imag_v.resize(z.Degree());
+    p_real_v.resize(p.Degree());
+    p_imag_v.resize(p.Degree());
+
+    p.FindRoots(&p_real_v[0],&p_imag_v[0]);
+    z.FindRoots(&z_real_v[0],&z_imag_v[0]);
+
+    qDebug()<<"real roots"<<p_real_v;
+    qDebug()<<"imag roots"<<z_imag_v;
+
+    QList<Root> eliminated;
+    int max_p = p_real_v.size();
+    if (max_p < p_imag_v.size()) max_p = p_imag_v.size();
+
+    int max_z = z_real_v.size();
+    if (max_z < z_imag_v.size()) max_z = z_imag_v.size();
+
+    for(int i = 0; i < max_p; i ++ ){
+        Root p_r = Root(getRootAt(p_real_v,i),getRootAt(p_imag_v,i));
+        for(int j = 0; j < max_z; j++){
+            Root z_r = Root(getRootAt(z_real_v,j),getRootAt(z_imag_v,j));
+            if (p_r == z_r){
+                eliminated.append(p_r);
+                break;
+            }
+        }
+    }
+
+    if (eliminated.count() == 0) return; //coz simplification is not needed
+
+    Polynomial z_simple = Polynomial(1);
+    Polynomial p_simple = Polynomial(1);
+
+    for(int i = 0; i < max_p; i ++ ){
+        Root p_r = Root(getRootAt(p_real_v,i),getRootAt(p_imag_v,i));
+        if (!eliminated.contains(p_r))
+            p_simple.IncludeComplexConjugateRootPair(p_r.real(),p_r.imaginary());
+    }
+
+    for(int i = 0; i < max_z; i ++ ){
+        Root z_r = Root(getRootAt(z_real_v,i),getRootAt(z_imag_v,i));
+        if (!eliminated.contains(z_r))
+            z_simple.IncludeComplexConjugateRootPair(z_r.real(),z_r.imaginary());
+    }
+
+//    if (z_simple.Degree() == 1 && z_simple[0] == 0) z_simple = Polynomial(1);
+//    if (p_simple.Degree() == 1 && p_simple[0] == 0) p_simple = Polynomial(1);
+
+    m_zerosPoly = std::make_shared<Polynomial>(z_simple);
+    m_polesPoly = std::make_shared<Polynomial>(p_simple);
+
+}
+
+double TransferFunction::getRootAt(QVector<double> &vect, int i)
+{
+    if (i < 0 || i >= vect.size()){
+        return 0;
+    }else
+        return vect[i];
+}
+
 QString TransferFunction::getTfEquation(const QString &plane)
 {
     //Return string in this form
     //"`W(s) = (a1 * s ^3 + a2 * s ^ 2 + a3 * s + a4)/(b1 * s ^3 + b2 * s ^ 2 + b3 * s + b4)`"
+
     QString zeroStr = getPolynomialEquation(m_zerosPoly,plane);
     QString poleStr = getPolynomialEquation(m_polesPoly,plane);
 

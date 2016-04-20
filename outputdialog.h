@@ -1,6 +1,8 @@
 #ifndef OUTPUTDIALOG_H
 #define OUTPUTDIALOG_H
 
+#include "jshelper.h"
+
 #include <QDialog>
 #include <QWebChannel>
 #include <QWebEngineView>
@@ -26,9 +28,6 @@ public:
 public slots:
     void displayEquation(QString equation);
 
-signals:
-    void showEquation(QString);
-
 private slots:
 
 private:
@@ -36,6 +35,7 @@ private:
     QWebEngineView *polyView;
     QWebChannel *webchannel;
     std::shared_ptr<ControlSystem> m_cs;
+    JsHelper *jshelper;
 };
 
 #endif // OUTPUTDIALOG_H

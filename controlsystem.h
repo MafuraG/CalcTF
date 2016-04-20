@@ -27,6 +27,7 @@ public:
     RootTableModel *getRootTModel() const;
 
     void updateRootTable();
+    void simplifyCS();
 private:
 
     std::shared_ptr<TransferFunction> m_controllerTF;

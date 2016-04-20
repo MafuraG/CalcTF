@@ -24,7 +24,8 @@ SOURCES += main.cpp\
     errorstrings.cpp \
     outputdialog.cpp \
     root.cpp \
-    roottablemodel.cpp
+    roottablemodel.cpp \
+    jshelper.cpp
 
 HEADERS  += mainwindow.h \
     Polynomial.h \
@@ -35,7 +36,8 @@ HEADERS  += mainwindow.h \
     errorstrings.h \
     outputdialog.h \
     root.h \
-    roottablemodel.h
+    roottablemodel.h \
+    jshelper.h
 
 FORMS    += mainwindow.ui \
     tfdialog.ui \

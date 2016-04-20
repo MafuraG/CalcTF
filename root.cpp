@@ -51,6 +51,13 @@ bool Root::setData(const int row, QVariant value)
     return false;
 }
 
+bool Root::isEqualTo(Root &rhs)
+{
+    if (this->real() == rhs.real() && this->imaginary() == rhs.imaginary())
+        return true;
+    return false;
+}
+
 QVariant Root::header(int col)
 {
     if (col >= 0 && col < ROOTSIZE){

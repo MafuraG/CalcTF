@@ -2,9 +2,9 @@
 
 ControlSystem::ControlSystem()
 {
-    m_controllerTF = std::make_shared<TransferFunction>();
-    m_feedbackTF = std::make_shared<TransferFunction>();
-    m_plantTF = std::make_shared<TransferFunction>();
+    m_controllerTF = std::make_shared<TransferFunction>(1);
+    m_feedbackTF = std::make_shared<TransferFunction>(1);
+    m_plantTF = std::make_shared<TransferFunction>(1);
     m_rootTModel = new RootTableModel();
 
     updateCs();
@@ -68,6 +68,13 @@ void ControlSystem::updateRootTable()
     //m_csTF->get
 }
 
+void ControlSystem::simplifyCS()
+{
+    //m_csTF->simplifyTF();
+}
+
+
+
 std::shared_ptr<TransferFunction> ControlSystem::getControlTF() const
 {
     return m_controllerTF;
@@ -102,6 +109,7 @@ void ControlSystem::setCsTF(std::shared_ptr<TransferFunction> &cTF, std::shared_
 
     m_csTF = std::make_shared<TransferFunction>();
     m_csTF->setTF(res.getZeroVectorStr(),res.getPolesVectorStr());
+
 }
 
 

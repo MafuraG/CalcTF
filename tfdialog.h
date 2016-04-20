@@ -1,6 +1,7 @@
 #ifndef TFDIALOG_H
 #define TFDIALOG_H
 
+#include "jshelper.h"
 #include "transferfunction.h"
 
 #include <QDialog>
@@ -27,8 +28,7 @@ public:
     static QString PATH_POLY_HTML;
 
 signals:
-    void tfDialogueClosed(bool);
-    void showEquation(QString);
+    void tfDialogueClosed(bool);    
 
 private slots:
     void on_buttonBox_accepted();
@@ -46,6 +46,7 @@ private:
     QWebEngineView *polyView;
     QWebChannel *webchannel;
     void clearUI();
+    JsHelper *jshelper;
 };
 
 #endif // TFDIALOG_H
