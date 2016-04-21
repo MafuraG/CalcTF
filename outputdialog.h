@@ -2,6 +2,7 @@
 #define OUTPUTDIALOG_H
 
 #include "jshelper.h"
+#include "plotdialog.h"
 
 #include <QDialog>
 #include <QWebChannel>
@@ -30,12 +31,15 @@ public slots:
 
 private slots:
 
+    void on_pushButton_rootlocus_clicked();
+
 private:
     Ui::OutputDialog *ui;
     QWebEngineView *polyView;
     QWebChannel *webchannel;
     std::shared_ptr<ControlSystem> m_cs;
     JsHelper *jshelper;
+    PlotDialog *plotDialog;
 };
 
 #endif // OUTPUTDIALOG_H

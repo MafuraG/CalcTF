@@ -6,7 +6,7 @@
 
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
 QT += webenginewidgets webchannel
 
@@ -25,7 +25,9 @@ SOURCES += main.cpp\
     outputdialog.cpp \
     root.cpp \
     roottablemodel.cpp \
-    jshelper.cpp
+    jshelper.cpp \
+    plotdialog.cpp \
+    qcustomplot.cpp
 
 HEADERS  += mainwindow.h \
     Polynomial.h \
@@ -37,11 +39,14 @@ HEADERS  += mainwindow.h \
     outputdialog.h \
     root.h \
     roottablemodel.h \
-    jshelper.h
+    jshelper.h \
+    plotdialog.h \
+    qcustomplot.h
 
 FORMS    += mainwindow.ui \
     tfdialog.ui \
-    outputdialog.ui
+    outputdialog.ui \
+    plotdialog.ui
 
 RESOURCES += \
     calctfres.qrc

@@ -29,7 +29,9 @@ OutputDialog::OutputDialog(QWidget *parent) :
 
     //Better to use qApp->applicationDirPath coz it gives the location of executable
 
-    polyView->setUrl(urlStr);    
+    polyView->setUrl(urlStr);
+
+    plotDialog = new PlotDialog();
 
 
 }
@@ -66,3 +68,9 @@ void OutputDialog::displayEquation(QString equation){
 
 
 
+
+void OutputDialog::on_pushButton_rootlocus_clicked()
+{
+    //display root locus plot of given transfer function
+    plotDialog->show();
+}
