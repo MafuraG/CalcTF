@@ -27,7 +27,10 @@ SOURCES += main.cpp\
     roottablemodel.cpp \
     jshelper.cpp \
     plotdialog.cpp \
-    qcustomplot.cpp
+    qcustomplot.cpp \
+    customgraph.cpp \
+    rootlocusgraph.cpp \
+    rootlocus.cpp
 
 HEADERS  += mainwindow.h \
     Polynomial.h \
@@ -41,7 +44,10 @@ HEADERS  += mainwindow.h \
     roottablemodel.h \
     jshelper.h \
     plotdialog.h \
-    qcustomplot.h
+    qcustomplot.h \
+    customgraph.h \
+    rootlocusgraph.h \
+    rootlocus.h
 
 FORMS    += mainwindow.ui \
     tfdialog.ui \

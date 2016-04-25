@@ -1,5 +1,6 @@
 #include "controlsystem.h"
 #include "outputdialog.h"
+#include "rootlocusgraph.h"
 #include "ui_outputdialog.h"
 
 OutputDialog::OutputDialog(QWidget *parent) :
@@ -72,5 +73,8 @@ void OutputDialog::displayEquation(QString equation){
 void OutputDialog::on_pushButton_rootlocus_clicked()
 {
     //display root locus plot of given transfer function
+    std::shared_ptr<TransferFunction> tf = m_cs->getCsTF();
+    m_cgraph = std::make_shared<RootLocusGraph>(tf);
+    plotDialog->setCustomGraph(m_cgraph.get());
     plotDialog->show();
 }

@@ -3,6 +3,7 @@
 
 #include "jshelper.h"
 #include "plotdialog.h"
+#include "customgraph.h"
 
 #include <QDialog>
 #include <QWebChannel>
@@ -40,6 +41,7 @@ private:
     std::shared_ptr<ControlSystem> m_cs;
     JsHelper *jshelper;
     PlotDialog *plotDialog;
+    std::shared_ptr<CustomGraph> m_cgraph;
 };
 
 #endif // OUTPUTDIALOG_H

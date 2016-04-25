@@ -39,7 +39,7 @@ public:
     void dumpValue(QString msg, const std::shared_ptr<Polynomial> &p);
 
     QString getTfEquation(const QString &plane="s");
-    QList<std::shared_ptr<Root>> getRootsClosedLoop();
+    QList<std::shared_ptr<Root>> getRootsClosedLoop(const double K = 1.0);
 
     bool isEmpty();
     void simplifyTF();

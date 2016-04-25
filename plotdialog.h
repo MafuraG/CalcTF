@@ -1,6 +1,8 @@
 #ifndef PLOTDIALOG_H
 #define PLOTDIALOG_H
 
+#include "customgraph.h"
+
 #include <QDialog>
 
 
@@ -17,9 +19,12 @@ public:
     explicit PlotDialog(QWidget *parent = 0);
     ~PlotDialog();
 
+    CustomGraph *getCustomGraph() const;
+    void setCustomGraph(CustomGraph *value);
+
 private:
     Ui::PlotDialog *ui;
-
+    CustomGraph *customGraph;
 };
 
 #endif // PLOTDIALOG_H

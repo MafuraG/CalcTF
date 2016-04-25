@@ -13,3 +13,15 @@ PlotDialog::~PlotDialog()
 {
     delete ui;
 }
+
+CustomGraph *PlotDialog::getCustomGraph() const
+{
+    return customGraph;
+}
+
+void PlotDialog::setCustomGraph(CustomGraph *value)
+{
+    customGraph = value;
+    customGraph->setPlot(ui->widget);
+    customGraph->plotGraph();
+}
