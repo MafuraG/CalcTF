@@ -412,11 +412,11 @@ QString TransferFunction::getTfEquation(const QString &plane)
 
 QList<std::shared_ptr<Root> > TransferFunction::getRootsClosedLoop(const double K)
 {
-    Polynomial D = *m_polesPoly;
-    Polynomial N = *m_zerosPoly;
+    Polynomial *D = m_polesPoly.get();
+    Polynomial *N = m_zerosPoly.get();
     QList<std::shared_ptr<Root>> rList;
 
-    Polynomial R = D + K*N;
+    Polynomial R = (*D) + K*(*N);
 
     QVector<double> real_vect;
     QVector<double>imag_vect;

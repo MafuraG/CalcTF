@@ -73,6 +73,7 @@ void TfDialog::on_buttonBox_rejected()
 void TfDialog::on_lineEdit_zeroP_editingFinished()
 {
     QString zerosStr = ui->lineEdit_zeroP->text();
+    zerosStr = zerosStr.simplified();
     if (zerosStr == "" ) return ;
     QString err;
     QString res = m_tf->setZerosPoly(zerosStr,&err);
@@ -86,6 +87,7 @@ void TfDialog::on_lineEdit_zeroP_editingFinished()
 void TfDialog::on_lineEdit_poleP_editingFinished()
 {
     QString polesStr = ui->lineEdit_poleP->text();
+    polesStr = polesStr.simplified();
     if (polesStr == "") return;
     QString err = "";
     QString res = m_tf->setPolesPoly(polesStr,&err);

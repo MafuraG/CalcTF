@@ -40,7 +40,7 @@ double RootLocus::K() const
 void RootLocus::calculateLocus()
 {
     double k = 0 ;
-    double k_max = 100;
+    double k_max = 50;
     int points = 10000;
 
     double step = k_max / points;

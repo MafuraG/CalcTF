@@ -16,6 +16,7 @@ private:
     void plotRootLocus();
     std::shared_ptr<RootLocus> m_locus;
     QCPDataMap *getQCPDataMap(const QList<std::shared_ptr<Root> > &roots);
+    void getXYvectors(const QList<std::shared_ptr<Root> > &roots, QVector<double> &x, QVector<double> &y);
 };
 
 #endif // ROOTLOCUSGRAPH_H
