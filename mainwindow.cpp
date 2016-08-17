@@ -37,23 +37,27 @@ void MainWindow::on_tfdialog_closed(bool status)
 void MainWindow::on_toolButton_controller_clicked()
 {
     tfdiag->setTf(m_cs->getControlTF());
+    tfdiag->setWindowTitle("Контроллер");
     tfdiag->show();
 }
 
 void MainWindow::on_toolButton_plant_clicked()
 {
     tfdiag->setTf(m_cs->getPlantTF());
+    tfdiag->setWindowTitle("Объект управления");
     tfdiag->show();
 }
 
 void MainWindow::on_toolButton_feedback_clicked()
 {
     tfdiag->setTf(m_cs->getFeedbackTF());
+    tfdiag->setWindowTitle("Датчик обратного связи");
     tfdiag->show();
 }
 
 void MainWindow::on_pushButton_clicked()
 {
     outdialog->setCs(m_cs);
+    outdialog->setWindowTitle("Общая передаточная функция системы управления");
     outdialog->show();
 }

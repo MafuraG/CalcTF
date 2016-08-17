@@ -43,6 +43,7 @@ std::shared_ptr<TransferFunction> ControlSystem::getCsTF()
 void ControlSystem::updateCs()
 {    
     setCsTF(m_controllerTF,m_feedbackTF,m_plantTF);
+    m_csTF->simplifyTF();
 }
 
 RootTableModel *ControlSystem::getRootTModel() const
@@ -53,7 +54,7 @@ RootTableModel *ControlSystem::getRootTModel() const
 void ControlSystem::updateRootTable()
 {
     m_rootTModel->removeRows(0,m_rootTModel->rowCount());
-    QList<std::shared_ptr<Root>> roots = m_csTF->getRootsClosedLoop();
+    QList<std::shared_ptr<Root>> roots = m_csTF->getRootsClosedLoop(0);
 
     for (int i = 0; i < roots.count(); i++)
     {

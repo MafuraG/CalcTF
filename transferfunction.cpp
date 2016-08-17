@@ -331,7 +331,9 @@ void TransferFunction::simplifyTF()
     Polynomial p = *m_polesPoly;
     Polynomial z = *m_zerosPoly;
 
-    if (p.Degree() == 0 || z.Degree() == 0) return;
+    if (p.Degree() == 0 || z.Degree() == 0) return; // no simplifcation needed
+
+    if (p.Degree() < z.Degree()) return; //this is not a proper transfer function
 
     z_real_v.resize(z.Degree());
     z_imag_v.resize(z.Degree());
@@ -341,21 +343,23 @@ void TransferFunction::simplifyTF()
     p.FindRoots(&p_real_v[0],&p_imag_v[0]);
     z.FindRoots(&z_real_v[0],&z_imag_v[0]);
 
-    qDebug()<<"real roots"<<p_real_v;
-    qDebug()<<"imag roots"<<z_imag_v;
+    qDebug()<<"pole real roots"<<p_real_v;
+    qDebug()<<"poles imag roots"<<p_imag_v;
+
+    qDebug()<<"zero real roots"<<z_real_v;
+    qDebug()<<"zero imag roots"<<z_imag_v;
+
 
     QList<Root> eliminated;
-    int max_p = p_real_v.size();
-    if (max_p < p_imag_v.size()) max_p = p_imag_v.size();
-
-    int max_z = z_real_v.size();
-    if (max_z < z_imag_v.size()) max_z = z_imag_v.size();
+    int max_p = p.Degree();
+    int max_z = z.Degree();
 
     for(int i = 0; i < max_p; i ++ ){
         Root p_r = Root(getRootAt(p_real_v,i),getRootAt(p_imag_v,i));
         for(int j = 0; j < max_z; j++){
             Root z_r = Root(getRootAt(z_real_v,j),getRootAt(z_imag_v,j));
             if (p_r == z_r){
+                qDebug()<<"eliminated root = "<< p_r.real()<<", "<<p_r.imaginary();
                 eliminated.append(p_r);
                 break;
             }
@@ -369,18 +373,32 @@ void TransferFunction::simplifyTF()
 
     for(int i = 0; i < max_p; i ++ ){
         Root p_r = Root(getRootAt(p_real_v,i),getRootAt(p_imag_v,i));
-        if (!eliminated.contains(p_r))
-            p_simple.IncludeComplexConjugateRootPair(p_r.real(),p_r.imaginary());
+        qDebug()<< "poles roots in loop = > "<< p_r.real()<<", "<<p_r.imaginary();
+        if (!eliminated.contains(p_r)){
+            qDebug()<< "poles roots not emiminated = > "<< p_r.real()<<", "<<p_r.imaginary();
+            if (p_r.imaginary() != 0){
+                p_simple.IncludeComplexConjugateRootPair(p_r.real(),p_r.imaginary());
+            }else{
+                p_simple.IncludeRealRoot(p_r.real());
+            }
+
+        }
     }
 
     for(int i = 0; i < max_z; i ++ ){
         Root z_r = Root(getRootAt(z_real_v,i),getRootAt(z_imag_v,i));
-        if (!eliminated.contains(z_r))
-            z_simple.IncludeComplexConjugateRootPair(z_r.real(),z_r.imaginary());
+        if (!eliminated.contains(z_r)){
+            qDebug()<< "zeros roots not emiminated = > "<< z_r.real()<<", "<< z_r.imaginary();
+            if (z_r.imaginary() != 0){
+                z_simple.IncludeComplexConjugateRootPair(z_r.real(),z_r.imaginary());
+            }else{
+                z_simple.IncludeRealRoot(z_r.real());
+            }
+        }
     }
 
-//    if (z_simple.Degree() == 1 && z_simple[0] == 0) z_simple = Polynomial(1);
-//    if (p_simple.Degree() == 1 && p_simple[0] == 0) p_simple = Polynomial(1);
+//    if (z_simple.Degree() == - 1) z_simple = Polynomial(1);
+//    if (p_simple.Degree() == - 1) p_simple = Polynomial(1);
 
     m_zerosPoly = std::make_shared<Polynomial>(z_simple);
     m_polesPoly = std::make_shared<Polynomial>(p_simple);
