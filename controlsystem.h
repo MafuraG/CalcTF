@@ -28,6 +28,8 @@ public:
 
     void updateRootTable();
     void simplifyCS();
+    void setCsTF(const std::shared_ptr<TransferFunction> &csTF);
+
 private:
 
     std::shared_ptr<TransferFunction> m_controllerTF;

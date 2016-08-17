@@ -97,12 +97,12 @@
       </size>
      </property>
      <property name="title">
-      <string>Графичекские характеристики</string>
+      <string>Характеристики переходной функции</string>
      </property>
      <widget class="QPushButton" name="pushButton_rootlocus">
       <property name="geometry">
        <rect>
-        <x>10</x>
+        <x>260</x>
         <y>20</y>
         <width>131</width>
         <height>51</height>
@@ -110,6 +110,32 @@
       </property>
       <property name="text">
        <string>Корневой годограф</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_constructTF">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>20</y>
+        <width>131</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Конструктор СУ</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_EditTF">
+      <property name="geometry">
+       <rect>
+        <x>130</x>
+        <y>20</y>
+        <width>131</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Редактировать СУ</string>
       </property>
      </widget>
     </widget>

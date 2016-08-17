@@ -35,6 +35,18 @@ OutputDialog::OutputDialog(QWidget *parent) :
     plotDialog = new PlotDialog();
 
 
+    tfdiag = new TfDialog();
+    mainwindow = new MainWindow();
+    //outdialog = new OutputDialog();
+    //connect(btype,&BuildingType::run_calculations,this,&MainWindow::run_calculations);
+    connect(tfdiag,&TfDialog::tfDialogueClosed,mainwindow,&MainWindow::on_tfdialog_closed);
+    connect(tfdiag,&TfDialog::tfDialogueClosed,this,&OutputDialog::on_tfdialog_closed);
+    connect(mainwindow,&MainWindow::on_mainwindow_closed,this,&OutputDialog::on_mainwindow_closed);
+
+    mainwindow->setTfdiag(tfdiag);
+    m_cs = std::make_shared<ControlSystem>();
+    mainwindow->setCs(m_cs);
+    //mainwindow->setOutdialog(this);
 }
 
 QString OutputDialog::PATH_POLY_HTML="screen1.html";
@@ -78,3 +90,45 @@ void OutputDialog::on_pushButton_rootlocus_clicked()
     plotDialog->setCustomGraph(m_cgraph.get());
     plotDialog->show();
 }
+
+void OutputDialog::on_pushButton_constructTF_clicked()
+{
+    //Call mainwindow
+    mainwindow->setCs(m_cs);
+    mainwindow->show();
+}
+
+void OutputDialog::on_pushButton_EditTF_clicked()
+{
+    //call transfer function editor
+    if (tfdiag != nullptr){
+        tfdiag->setTf(m_cs->getCsTF());
+        tfdiag->setWindowTitle("Общая передаточная функция");
+        tfdiag->show();
+    }
+}
+
+void OutputDialog::on_tfdialog_closed(bool status)
+{
+    if (status){
+        //update cs
+        m_cs->setCsTF(tfdiag->tf());
+        this->setCs(m_cs);
+        //qDebug()<<"Display Equation signal to be called";
+        //emit displayEquation(m_cs->getCsTF()->getTfEquation());
+        //jshelper->displayEquation(equation);
+    }
+}
+
+void OutputDialog::on_mainwindow_closed(bool status)
+{
+    if (status){
+        //update cs
+        //m_cs->setCsTF();
+        this->setCs(mainwindow->getCs());
+        //qDebug()<<"Display Equation signal to be called";
+        //emit displayEquation(m_cs->getCsTF()->getTfEquation());
+        //jshelper->displayEquation(equation);
+    }
+}
+

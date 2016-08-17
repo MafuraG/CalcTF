@@ -4,6 +4,8 @@
 #include "jshelper.h"
 #include "plotdialog.h"
 #include "customgraph.h"
+#include "tfdialog.h"
+#include "mainwindow.h"
 
 #include <QDialog>
 #include <QWebChannel>
@@ -27,21 +29,35 @@ public:
     std::shared_ptr<ControlSystem> cs() const;
     void setCs(const std::shared_ptr<ControlSystem> &cs);
 
+    TfDialog *getTfdiag() const;
+    void setTfdiag(TfDialog *value);
+
 public slots:
     void displayEquation(QString equation);
+    void on_tfdialog_closed(bool status);
+    void on_mainwindow_closed(bool status);
 
 private slots:
 
     void on_pushButton_rootlocus_clicked();
 
+    void on_pushButton_constructTF_clicked();
+
+    void on_pushButton_EditTF_clicked();
+
 private:
     Ui::OutputDialog *ui;
     QWebEngineView *polyView;
     QWebChannel *webchannel;
+
     std::shared_ptr<ControlSystem> m_cs;
     JsHelper *jshelper;
     PlotDialog *plotDialog;
     std::shared_ptr<CustomGraph> m_cgraph;
+
+    TfDialog *tfdiag;
+    OutputDialog *outdialog;
+    MainWindow *mainwindow;
 };
 
 #endif // OUTPUTDIALOG_H

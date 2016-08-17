@@ -74,6 +74,11 @@ void ControlSystem::simplifyCS()
     //m_csTF->simplifyTF();
 }
 
+void ControlSystem::setCsTF(const std::shared_ptr<TransferFunction> &csTF)
+{
+    m_csTF = csTF;
+}
+
 
 
 std::shared_ptr<TransferFunction> ControlSystem::getControlTF() const
@@ -103,7 +108,7 @@ void ControlSystem::setCsTF(std::shared_ptr<TransferFunction> &cTF, std::shared_
 
 
     auto res2 =  ctf * ptf * ftf;
-    res2 = TransferFunction(1) - res2;
+    res2 = TransferFunction(1) + res2;
 
     auto res = res1 / res2 ;
     //auto res = TransferFunction(pTF->getZeroVectorStr(),pTF->getPolesVectorStr());

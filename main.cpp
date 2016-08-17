@@ -1,4 +1,6 @@
-#include "mainwindow.h"
+
+#include "outputdialog.h"
+
 #include <QApplication>
 
 int main(int argc, char *argv[])
@@ -7,7 +9,7 @@ int main(int argc, char *argv[])
     qputenv("QTWEBENGINE_REMOTE_DEBUGGING", "23654");
 #endif
     QApplication a(argc, argv);
-    MainWindow w;
+    OutputDialog w;
     w.show();
 
     return a.exec();
