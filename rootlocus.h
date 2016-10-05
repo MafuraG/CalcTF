@@ -29,6 +29,7 @@ private:
 
     void calculateLocus();
     double m_K;
+    double calculateDelta(QList<std::shared_ptr<Root> > &rootList1, QList<std::shared_ptr<Root> > &rootList2);
 };
 
 #endif // ROOTLOCUS_H

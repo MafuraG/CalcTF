@@ -4,6 +4,7 @@
 #include <QString>
 #include <QVariant>
 #include <QVector>
+#include <complex>
 
 
 
@@ -24,8 +25,9 @@ public:
 
     QVariant data(const int row) const;
     bool setData(const int row, QVariant value);
+    double magnitude();
 
-    bool isEqualTo(Root &rhs);
+    bool isEqualTo(Root &rhs);    
 
     static QVariant header(int col);
 

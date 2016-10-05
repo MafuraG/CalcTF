@@ -51,6 +51,12 @@ bool Root::setData(const int row, QVariant value)
     return false;
 }
 
+double Root::magnitude()
+{
+    std::complex<double> num (real(),imaginary());
+    return std::abs(num);
+}
+
 bool Root::isEqualTo(Root &rhs)
 {
     if (this->real() == rhs.real() && this->imaginary() == rhs.imaginary())
