@@ -58,16 +58,33 @@ double RootLocus::calculateDelta(QList<std::shared_ptr<Root>> &rootList1 , QList
 
 }
 
+
+
+void RootLocus::calculateLocus1()
+{
+    m_locus.clear();
+    Polynomial N = *m_tf->zerosPoly();
+    Polynomial D = *m_tf->polesPoly();
+
+    int Max_X = 500, Max_Y = 500;
+
+    m_locus = m_tf->getRootLocus(N,D,true,0,0,Max_X,Max_Y);
+}
+
 void RootLocus::calculateLocus()
 {
-    double k = 0.0001 ;
+    double k = 0.00001 ;
     double k_max = 50;
-    int points = 1000;
+    int points = 10000;
     int count = 0;
 
     double step = 0;
     QList<std::shared_ptr<Root>>roots_p = m_tf->getRootsClosedLoop(0);
     m_poleR = m_tf->getRootsClosedLoop(0);
+
+    for(int i = 0; i< m_poleR.count();i++){
+        m_tf->dumpKValues(m_poleR[i]->real(),m_poleR[i]->imaginary());
+    }
 
 
     m_locus.clear();
@@ -79,12 +96,13 @@ void RootLocus::calculateLocus()
 
 
         double delta = calculateDelta(roots,roots_p);
-        qDebug()<<"delta = "<< delta;
+        //qDebug()<<"delta = "<< delta;
         step = 1/delta;
-        if (step > 1000) {
-           delta = 100;
+        if (step > 1000 || step < 0.001) {
+           delta = 1000;
            //qDebug()<<"less delta = "<< delta;
         }
+
         step = 1/delta;
 
 

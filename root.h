@@ -5,6 +5,7 @@
 #include <QVariant>
 #include <QVector>
 #include <complex>
+#include <memory>
 
 
 
@@ -26,6 +27,7 @@ public:
     QVariant data(const int row) const;
     bool setData(const int row, QVariant value);
     double magnitude();
+    std::complex<double> complexRoot();
 
     bool isEqualTo(Root &rhs);    
 
@@ -41,6 +43,27 @@ inline bool operator==(const Root& lhs, const Root& rhs){
     if (lhs.real() == rhs.real() && lhs.imaginary() == rhs.imaginary())
         return true;
     return false;
+}
+
+inline bool operator<(const Root& lhs, const Root& rhs){
+    /* do actual comparison */
+    if (lhs.real() < rhs.real() && lhs.imaginary() < rhs.imaginary())
+        return true;
+    return false;
+}
+
+inline bool operator==(const std::shared_ptr<Root>  &lhs, const std::shared_ptr<Root> &rhs){
+    /* do actual comparison */
+    Root lhs_ = *lhs;
+    Root rhs_ = *rhs;
+    return (lhs_ == rhs_);
+}
+
+inline bool operator<(const std::shared_ptr<Root>  &lhs, const std::shared_ptr<Root> &rhs){
+    /* do actual comparison */
+    Root lhs_ = *lhs;
+    Root rhs_ = *rhs;
+    return (lhs_ < rhs_);
 }
 
 #endif // ROOT_H

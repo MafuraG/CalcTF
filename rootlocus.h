@@ -19,7 +19,7 @@ public:
 
     QList<std::shared_ptr<Root> > locus() const;
 
-    double K() const;
+    double K() const;    
 
 private:
     std::shared_ptr<TransferFunction> m_tf;
@@ -28,6 +28,8 @@ private:
     QList<std::shared_ptr<Root>> m_locus;
 
     void calculateLocus();
+    void calculateLocus1();
+
     double m_K;
     double calculateDelta(QList<std::shared_ptr<Root> > &rootList1, QList<std::shared_ptr<Root> > &rootList2);
 };

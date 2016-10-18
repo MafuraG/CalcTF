@@ -7,6 +7,7 @@
 #include <QStringBuilder>
 #include <QVector>
 #include <QDebug>
+#include <complex>
 
 TransferFunction::TransferFunction()
 {    
@@ -436,18 +437,209 @@ QList<std::shared_ptr<Root> > TransferFunction::getRootsClosedLoop(const double 
 
     Polynomial R = (*D) + K*(*N);
 
+    rList = getRoots(R);
+
+    return rList;
+}
+
+QList<std::shared_ptr<Root> > TransferFunction::getRootsClosedLoop(Polynomial &N,Polynomial &D,
+                                                                   const double K)
+{
+    QList<std::shared_ptr<Root>> rList;
+
+    Polynomial R = D + K * N;
+
+    rList = getRoots(R);
+
+    return rList;
+}
+
+QList<std::shared_ptr<Root>> TransferFunction::getRootLocus(Polynomial &N,Polynomial &D,
+                                                            bool positive_K,
+                                                            double min_x,double min_y,
+                                                            double max_x,double max_y)
+{
+    QList<std::shared_ptr<Root>> rZeros = getRoots(N);
+    QList<std::shared_ptr<Root>> rPoles = getRoots(D);
+
+    Polynomial D1 = D.Derivative();
+    Polynomial N1 = N.Derivative();
+
+    Polynomial C = D1*N - D*N1;
+
+    double delta = 0;
+    double POINTS = 500;
+    if (max_x > max_y) delta = max_x / POINTS ;
+    else delta = max_y / POINTS;
+
+    QList<std::shared_ptr<Root>> rCond = getRoots(C);
+
+    removeRoots(rCond,rZeros);
+    removeRoots(rCond,rPoles);
+
+    QList<double> KList;
+
+    KList.clear();
+
+    for (int i = 0 ; i < rCond.count(); i++)
+    {
+        auto r = rCond[i]->complexRoot();
+        std::complex<double> k = calculateK(N,D,r);
+        if (k.imag() == 0 && k.real() > 0) {
+            KList.removeAll(k.real());
+            KList.append(k.real());
+        }
+    }
+
+    double K_MIN = 0 , K_MAX = 1000;
+
+    KList.append(K_MIN);
+    KList.append(K_MAX);
+
+    std::sort(KList.begin(),KList.end());
+    QList<std::shared_ptr<Root>> result;
+    QList<QList<std::shared_ptr<Root>>> segments;
+
+    double K = 0;
+    double step = 0;
+    auto start = getRootsClosedLoop(N,D,K);
+
+    for (int i = 0 ; i < start.count() ; i++){
+        QList<std::shared_ptr<Root>> segment;
+        segment.append(start[i]);
+        segments.append(segment);
+    }
+    auto curr_roots = start;
+    int count = 0;
+    int MAX_POINTS = 5000;
+    while (KList.count() > 0){
+        QList<std::complex<double>> steps;
+        for(int i = 0 ; i < curr_roots.count() ; i++)
+        {
+            auto s = calculateStep(N,D,delta,K,curr_roots[i]->complexRoot());            
+            steps.append(s);
+        }
+        std::sort(steps.begin(),steps.end(),[](std::complex<double>  &lhs, std::complex<double> &rhs){
+            /* do actual comparison */
+            return (lhs.real() < rhs.real());
+        });
+
+        step = steps[0].real(); //Leap of faith, assuming imag = 0
+        K +=step;
+        
+        curr_roots = getRootsClosedLoop(N,D,K);
+        
+        for(int i = 0 ; i < segments.count() ; i++)
+        {
+            segments[i].append(curr_roots[i]);
+        }
+        
+        if (KList.contains(K)){
+            //close one of segments
+            for(int i = 0 ; i < curr_roots.count() ; i++)
+            {
+                
+            }
+            KList.removeAll(K);
+        }
+        if (KList.count() == 0 || count == MAX_POINTS) break;
+        count++;
+    }
+
+    for (int i = 0 ; i < segments.count(); i++){
+        result.append(segments[i]);
+    }
+
+    return result;
+}
+
+std::complex<double> TransferFunction::calculateStep(Polynomial &N,Polynomial &D,
+                                       double delta, double K,
+                                       std::complex<double> &p)
+{
+    unsigned int L = getL(N,D,K,p);
+    auto step1 = std::pow(delta, L) / factorial(L);
+    auto step2 = std::pow(evaluateComplex(D,p),L);
+    auto step3 = K * std::pow(evaluateComplex(N,p),L);
+    auto step4 = evaluateComplex(N,p);
+    
+    auto step = step1 * std::abs((step2 + step3)/ step4);
+    
+    return step;
+}
+
+unsigned int TransferFunction::getL(Polynomial &N,Polynomial &D, double K, std::complex<double> &p)
+{
+    Polynomial D_s = D + K*N;
+    auto roots = getRoots(D_s);
+
+    std::shared_ptr<Root> pr = std::make_shared<Root>(p.real(),p.imag());
+
+    int res = roots.count(pr);
+
+    return res;
+}
+
+std::complex<double> TransferFunction::evaluateComplex(const Polynomial &P, std::complex<double> p)
+{
+    double pr,pi;
+    P.EvaluateComplex(p.real(),p.imag(),pr,pi);
+
+    return std::complex<double>(pr,pi);
+}
+
+unsigned int TransferFunction::factorial(unsigned int n)
+{
+    unsigned int ret = 1;
+    for (unsigned int i = 1; i <=n; i++)
+        ret *=i;
+    return ret;
+}
+
+std::complex<double> TransferFunction::calculateK(const Polynomial &N, const Polynomial &D,
+                                                  const std::complex<double> &root)
+{
+    double dr,di,nr,ni;
+    Polynomial D_neg = -1 * D ;
+    D_neg.EvaluateComplex(root.real(),root.imag(),dr,di);
+    N.EvaluateComplex(root.real(),root.imag(),nr,ni);
+
+    std::complex<double> dc(dr,di);
+    std::complex<double> nc(nr,ni);
+
+    std::complex<double> res;
+
+    res = dc / nc ;
+
+
+    qDebug() << "Value of K at point xr="<<root.real()<<" and xi="<<root.imag()<<" equals = "<<res.real()<<" "<<res.imag()<<"i.";
+
+    return res;
+}
+
+void TransferFunction::removeRoots(QList<std::shared_ptr<Root>> &rootList ,
+                                   const QList<std::shared_ptr<Root>> &removeList )
+{
+    for (int i = 0 ; i < removeList.count(); i++)
+    {
+        rootList.removeAll(removeList[i]);
+    }
+}
+
+QList<std::shared_ptr<Root>> TransferFunction::getRoots(Polynomial &P){
+    QList<std::shared_ptr<Root>> rList;
+
     QVector<double> real_vect;
     QVector<double>imag_vect;
 
-    real_vect.resize(R.Degree());
-    imag_vect.resize(R.Degree());
+    real_vect.resize(P.Degree());
+    imag_vect.resize(P.Degree());
 
     int num_of_roots = 0;
 
-    if (R.Degree() == 0) return rList;
+    if (P.Degree() == 0) return rList;
 
-    R.FindRoots(&real_vect[0],&imag_vect[0],&num_of_roots);
-
+    P.FindRoots(&real_vect[0],&imag_vect[0],&num_of_roots);
 
     for(int i = 0 ; i < num_of_roots; i++){
         auto r = std::make_shared<Root>(real_vect[i],imag_vect[i]);
@@ -455,6 +647,28 @@ QList<std::shared_ptr<Root> > TransferFunction::getRootsClosedLoop(const double 
     }
 
     return rList;
+}
+
+std::complex<double>  TransferFunction::dumpKValues(double xr,double xi){
+    Polynomial D = *m_polesPoly.get();
+    Polynomial N = *m_zerosPoly.get();
+
+    double dr,di,nr,ni;
+    D = -1 * D ;
+    D.EvaluateComplex(xr,xi,dr,di);
+    N.EvaluateComplex(xr,xi,nr,ni);
+
+    std::complex<double> dc(dr,di);
+    std::complex<double> nc(nr,ni);
+
+    std::complex<double> res;
+
+    res = dc / nc ;
+
+
+    qDebug() << "Value of K at point xr="<<xr<<" and xi="<<xi<<" equals = "<<res.real()<<" "<<res.imag()<<"i.";
+
+    return res;
 }
 
 bool TransferFunction::isEmpty()

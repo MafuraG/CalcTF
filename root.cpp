@@ -57,6 +57,12 @@ double Root::magnitude()
     return std::abs(num);
 }
 
+std::complex<double> Root::complexRoot()
+{
+    std::complex<double> r(real(),imaginary());
+    return r;
+}
+
 bool Root::isEqualTo(Root &rhs)
 {
     if (this->real() == rhs.real() && this->imaginary() == rhs.imaginary())

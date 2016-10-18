@@ -43,6 +43,8 @@ public:
 
     bool isEmpty();
     void simplifyTF();
+    std::complex<double> dumpKValues(double xr, double xi);
+    QList<std::shared_ptr<Root> > getRootLocus(Polynomial &N, Polynomial &D, bool positive_K, double min_x, double min_y, double max_x, double max_y);
 private:
 
 
@@ -56,6 +58,14 @@ private:
     QString getPolynomialVectorStr(const Polynomial &p);    
     void initTS();
     double getRootAt(QVector<double> &vect, int i);
+    QList<std::shared_ptr<Root> > getRoots(Polynomial &P);
+    void removeRoots(QList<std::shared_ptr<Root> > &rootList, const QList<std::shared_ptr<Root> > &removeList);
+    std::complex<double> calculateK(const Polynomial &N, const Polynomial &D, const std::complex<double> &root);
+    unsigned int getL(Polynomial &N, Polynomial &D, double K, std::complex<double> &p);
+    QList<std::shared_ptr<Root> > getRootsClosedLoop(Polynomial &N, Polynomial &D, const double K);
+    std::complex<double> calculateStep(Polynomial &N, Polynomial &D, double delta, double K, std::complex<double> &p);
+    std::complex<double> evaluateComplex(const Polynomial &P, std::complex<double> p);
+    unsigned int factorial(unsigned int n);
 };
 
 TransferFunction operator *(const TransferFunction &tr0, const TransferFunction &tr1);
