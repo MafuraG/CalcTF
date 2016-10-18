@@ -15,7 +15,7 @@ void RootLocus::setTf(const std::shared_ptr<TransferFunction> &tf)
 {
     m_tf = tf;
     //Get poleR and zeroR
-    calculateLocus();
+    calculateLocus1();
 }
 
 QList<std::shared_ptr<Root> > RootLocus::poleR() const

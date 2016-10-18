@@ -66,6 +66,7 @@ private:
     std::complex<double> calculateStep(Polynomial &N, Polynomial &D, double delta, double K, std::complex<double> &p);
     std::complex<double> evaluateComplex(const Polynomial &P, std::complex<double> p);
     unsigned int factorial(unsigned int n);
+    double getProximity(QList<std::shared_ptr<Root> > &r, QList<std::shared_ptr<Root> > &r1);
 };
 
 TransferFunction operator *(const TransferFunction &tr0, const TransferFunction &tr1);

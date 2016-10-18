@@ -488,6 +488,7 @@ QList<std::shared_ptr<Root>> TransferFunction::getRootLocus(Polynomial &N,Polyno
         if (k.imag() == 0 && k.real() > 0) {
             KList.removeAll(k.real());
             KList.append(k.real());
+            qDebug()<<"K val = "<< k.real()<<".";
         }
     }
 
@@ -511,13 +512,17 @@ QList<std::shared_ptr<Root>> TransferFunction::getRootLocus(Polynomial &N,Polyno
     }
     auto curr_roots = start;
     int count = 0;
-    int MAX_POINTS = 5000;
-    while (KList.count() > 0){
+    int MAX_POINTS = 10000;
+    delta = 1;
+    while (true){
         QList<std::complex<double>> steps;
         for(int i = 0 ; i < curr_roots.count() ; i++)
         {
-            auto s = calculateStep(N,D,delta,K,curr_roots[i]->complexRoot());            
+            double K_p = K;
+            auto p = curr_roots[i]->complexRoot();
+            auto s = calculateStep(N,D,delta,K_p,p);
             steps.append(s);
+            //qDebug()<<"step => "<<s.real()<<" "<<s.imag()<<"i";
         }
         std::sort(steps.begin(),steps.end(),[](std::complex<double>  &lhs, std::complex<double> &rhs){
             /* do actual comparison */
@@ -525,6 +530,8 @@ QList<std::shared_ptr<Root>> TransferFunction::getRootLocus(Polynomial &N,Polyno
         });
 
         step = steps[0].real(); //Leap of faith, assuming imag = 0
+        //qDebug()<<"step = "<< step<< "val K"<<K;
+        //step = 0.01;
         K +=step;
         
         curr_roots = getRootsClosedLoop(N,D,K);
@@ -540,7 +547,7 @@ QList<std::shared_ptr<Root>> TransferFunction::getRootLocus(Polynomial &N,Polyno
             {
                 
             }
-            KList.removeAll(K);
+            //KList.removeAll(K);
         }
         if (KList.count() == 0 || count == MAX_POINTS) break;
         count++;
@@ -557,15 +564,27 @@ std::complex<double> TransferFunction::calculateStep(Polynomial &N,Polynomial &D
                                        double delta, double K,
                                        std::complex<double> &p)
 {
-    unsigned int L = getL(N,D,K,p);
-    auto step1 = std::pow(delta, L) / factorial(L);
-    auto step2 = std::pow(evaluateComplex(D,p),L);
-    auto step3 = K * std::pow(evaluateComplex(N,p),L);
-    auto step4 = evaluateComplex(N,p);
+//    unsigned int L = getL(N,D,K,p);
+//    //qDebug()<<"L = "<<L;
+//    auto step1 = std::pow(delta, L) / factorial(L);
+//    auto step2 = std::pow(evaluateComplex(D,p),L);
+//    auto step3 = K * std::pow(evaluateComplex(N,p),L);
+//    auto step4 = evaluateComplex(N,p);
     
-    auto step = step1 * std::abs((step2 + step3)/ step4);
+//    auto step = step1 * std::abs((step2 + step3)/ step4);
+    auto p = getRootsClosedLoop(N,D,K);
+
+
+    while (delta > std::abs(K - K_1)){
+
+    }
     
     return step;
+}
+
+double TransferFunction::getProximity(QList<std::shared_ptr<Root>> &r, QList<std::shared_ptr<Root>> &r1)
+{
+
 }
 
 unsigned int TransferFunction::getL(Polynomial &N,Polynomial &D, double K, std::complex<double> &p)
@@ -576,7 +595,7 @@ unsigned int TransferFunction::getL(Polynomial &N,Polynomial &D, double K, std::
     std::shared_ptr<Root> pr = std::make_shared<Root>(p.real(),p.imag());
 
     int res = roots.count(pr);
-
+    //res = 1;
     return res;
 }
 
@@ -612,7 +631,7 @@ std::complex<double> TransferFunction::calculateK(const Polynomial &N, const Pol
     res = dc / nc ;
 
 
-    qDebug() << "Value of K at point xr="<<root.real()<<" and xi="<<root.imag()<<" equals = "<<res.real()<<" "<<res.imag()<<"i.";
+    //qDebug() << "Value of K at point xr="<<root.real()<<" and xi="<<root.imag()<<" equals = "<<res.real()<<" "<<res.imag()<<"i.";
 
     return res;
 }
