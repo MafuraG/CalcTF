@@ -66,9 +66,14 @@ void RootLocus::calculateLocus1()
     Polynomial N = *m_tf->zerosPoly();
     Polynomial D = *m_tf->polesPoly();
 
-    int Max_X = 500, Max_Y = 500;
+    double Max_X = 500, Max_Y = 500;
+
+
 
     m_locus = m_tf->getRootLocus(N,D,true,0,0,Max_X,Max_Y);
+
+    m_poleR = m_tf->getRootsClosedLoop(0);
+    m_zeroR = m_tf->getRootsClosedLoop(Max_Y);
 }
 
 void RootLocus::calculateLocus()

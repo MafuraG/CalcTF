@@ -1,3 +1,6 @@
+
+#define _USE_MATH_DEFINES
+
 #include "transferfunction.h"
 #include "Polynomial.h"
 #include "errorstrings.h"
@@ -8,6 +11,7 @@
 #include <QVector>
 #include <QDebug>
 #include <complex>
+#include <math.h>
 
 TransferFunction::TransferFunction()
 {    
@@ -457,7 +461,7 @@ QList<std::shared_ptr<Root> > TransferFunction::getRootsClosedLoop(Polynomial &N
 QList<std::shared_ptr<Root>> TransferFunction::getRootLocus(Polynomial &N,Polynomial &D,
                                                             bool positive_K,
                                                             double min_x,double min_y,
-                                                            double max_x,double max_y)
+                                                            double max_x,double &max_y)
 {
     QList<std::shared_ptr<Root>> rZeros = getRoots(N);
     QList<std::shared_ptr<Root>> rPoles = getRoots(D);
@@ -492,7 +496,7 @@ QList<std::shared_ptr<Root>> TransferFunction::getRootLocus(Polynomial &N,Polyno
         }
     }
 
-    double K_MIN = 0 , K_MAX = 1000;
+    double K_MIN = 0 , K_MAX = 2000;
 
     KList.append(K_MIN);
     KList.append(K_MAX);
@@ -513,50 +517,40 @@ QList<std::shared_ptr<Root>> TransferFunction::getRootLocus(Polynomial &N,Polyno
     auto curr_roots = start;
     int count = 0;
     int MAX_POINTS = 10000;
-    delta = 1;
+    double radius = 1;
     while (true){
-        QList<std::complex<double>> steps;
+        QList<double> steps;
         for(int i = 0 ; i < curr_roots.count() ; i++)
         {
             double K_p = K;
             auto p = curr_roots[i]->complexRoot();
-            auto s = calculateStep(N,D,delta,K_p,p);
-            steps.append(s);
-            //qDebug()<<"step => "<<s.real()<<" "<<s.imag()<<"i";
+            auto s = getRootsInCircle(N,D,radius,K_p,p);
+            if (s.real() != 0)
+                steps.append(s.real());
+            //qDebug()<<"step => "<<steps[steps.count()-1];
         }
-        std::sort(steps.begin(),steps.end(),[](std::complex<double>  &lhs, std::complex<double> &rhs){
-            /* do actual comparison */
-            return (lhs.real() < rhs.real());
-        });
+        if (steps.count() != 0){
+            std::sort(steps.begin(),steps.end());
+            step = steps[0]; //Leap of faith, assuming imag = 0
+        }else{
+            step = K + 0.01;
 
-        step = steps[0].real(); //Leap of faith, assuming imag = 0
-        //qDebug()<<"step = "<< step<< "val K"<<K;
+        }
+
+
         //step = 0.01;
-        K +=step;
+        K = step;
+        qDebug()<<"step = "<< step<< "val K"<<K<<" count = "<<count;
         
         curr_roots = getRootsClosedLoop(N,D,K);
         
-        for(int i = 0 ; i < segments.count() ; i++)
-        {
-            segments[i].append(curr_roots[i]);
-        }
-        
-        if (KList.contains(K)){
-            //close one of segments
-            for(int i = 0 ; i < curr_roots.count() ; i++)
-            {
-                
-            }
-            //KList.removeAll(K);
-        }
-        if (KList.count() == 0 || count == MAX_POINTS) break;
+        result.append(curr_roots);
+
+        if (count == MAX_POINTS) break;
         count++;
     }
 
-    for (int i = 0 ; i < segments.count(); i++){
-        result.append(segments[i]);
-    }
-
+    max_y = K;
     return result;
 }
 
@@ -564,27 +558,48 @@ std::complex<double> TransferFunction::calculateStep(Polynomial &N,Polynomial &D
                                        double delta, double K,
                                        std::complex<double> &p)
 {
-//    unsigned int L = getL(N,D,K,p);
-//    //qDebug()<<"L = "<<L;
-//    auto step1 = std::pow(delta, L) / factorial(L);
-//    auto step2 = std::pow(evaluateComplex(D,p),L);
-//    auto step3 = K * std::pow(evaluateComplex(N,p),L);
-//    auto step4 = evaluateComplex(N,p);
     
-//    auto step = step1 * std::abs((step2 + step3)/ step4);
-    auto p = getRootsClosedLoop(N,D,K);
-
-
-    while (delta > std::abs(K - K_1)){
-
-    }
-    
-    return step;
+    return getRootsInCircle(N,D,K,delta,p);
 }
 
-double TransferFunction::getProximity(QList<std::shared_ptr<Root>> &r, QList<std::shared_ptr<Root>> &r1)
+std::complex<double> TransferFunction::getRootsInCircle(Polynomial &N, Polynomial &D,
+                                                                double radius,double K, std::complex<double> center)
 {
+    int MAX_POINTS = 1000;
+    double rad = 0;
+    double step = (2 * M_PI)/ MAX_POINTS;
+    std::complex<double> root;
+    int i = 0;
+    for(;;){
+        root = getPointOnCircle(radius,rad,center);
+        auto k_c = calculateK(N,D,root);
+        double K_new;
+        if (std::abs(k_c.imag()) < 0.00000001 || k_c.real() > 0 ) K_new = k_c.real();
 
+        if (K_new > K) {
+            //qDebug()<<"K_new =>"<< K_new;
+            return std::complex<double>(K_new,0);
+        }
+        i++;
+        rad = step* i;
+
+        if (rad > 2 * M_PI) {
+            root= std::complex<double>(0,0);
+            break;
+        }
+    }
+
+    return std::complex<double>(0.0001,0);
+}
+
+std::complex<double> TransferFunction::getPointOnCircle(double radius, double radians, std::complex<double> &center)
+{
+//    float x = (float)(radius * Math.Cos(angleInDegrees * Math.PI / 180F)) + origin.X;
+//    float y = (float)(radius * Math.Sin(angleInDegrees * Math.PI / 180F)) + origin.Y;
+    double x = radius * std::cos(radians) + center.real();
+    double y = radius * std::sin(radians) + center.imag();
+
+    return std::complex<double>(x,y);
 }
 
 unsigned int TransferFunction::getL(Polynomial &N,Polynomial &D, double K, std::complex<double> &p)
