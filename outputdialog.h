@@ -47,11 +47,11 @@ private slots:
 
 private:
     Ui::OutputDialog *ui;
-    QWebEngineView *polyView;
-    QWebChannel *webchannel;
+//    QWebEngineView *polyView;
+//    QWebChannel *webchannel;
 
     std::shared_ptr<ControlSystem> m_cs;
-    JsHelper *jshelper;
+    //JsHelper *jshelper;
     PlotDialog *plotDialog;
     std::shared_ptr<CustomGraph> m_cgraph;
 

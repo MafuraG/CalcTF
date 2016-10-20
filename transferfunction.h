@@ -43,8 +43,8 @@ public:
 
     bool isEmpty();
     void simplifyTF();
-    std::complex<double> dumpKValues(double xr, double xi);
-    QList<std::shared_ptr<Root> > getRootLocus(Polynomial &N, Polynomial &D, bool positive_K, double min_x, double min_y, double max_x, double &max_y);
+    std::complex<double> dumpKValues(double xr, double xi);    
+    QList<std::shared_ptr<Root> > getRootLocus(Polynomial &N, Polynomial &D, double &K_max, QList<QList<std::shared_ptr<Root> > > &locus);
 private:
 
 
@@ -62,12 +62,13 @@ private:
     void removeRoots(QList<std::shared_ptr<Root> > &rootList, const QList<std::shared_ptr<Root> > &removeList);
     std::complex<double> calculateK(const Polynomial &N, const Polynomial &D, const std::complex<double> &root);
     unsigned int getL(Polynomial &N, Polynomial &D, double K, std::complex<double> &p);
-    QList<std::shared_ptr<Root> > getRootsClosedLoop(Polynomial &N, Polynomial &D, const double K);
-    std::complex<double> calculateStep(Polynomial &N, Polynomial &D, double delta, double K, std::complex<double> &p);
+    QList<std::shared_ptr<Root> > getRootsClosedLoop(Polynomial &N, Polynomial &D, const double K);    
     std::complex<double> evaluateComplex(const Polynomial &P, std::complex<double> p);
     unsigned int factorial(unsigned int n);
     std::complex<double> getPointOnCircle(double radius, double radians, std::complex<double> &center);
-    std::complex<double> getRootsInCircle(Polynomial &N, Polynomial &D, double radius, double K, std::complex<double> center);
+    double getRootsInCircle(Polynomial &N, Polynomial &D,
+                                          double radius,double K, std::complex<double> center,
+                                            std::complex<double> &root);
 };
 
 TransferFunction operator *(const TransferFunction &tr0, const TransferFunction &tr1);

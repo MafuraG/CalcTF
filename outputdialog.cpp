@@ -9,28 +9,28 @@ OutputDialog::OutputDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    polyView = new QWebEngineView(this);
+//    polyView = new QWebEngineView(this);
 
-    webchannel = new QWebChannel(polyView->page());
+//    webchannel = new QWebChannel(polyView->page());
 
-    polyView->page()->setWebChannel(webchannel);
+//    polyView->page()->setWebChannel(webchannel);
 
-    jshelper = new JsHelper();
+//    jshelper = new JsHelper();
 
-    webchannel->registerObject(QStringLiteral("jshelper"), jshelper);
+//    webchannel->registerObject(QStringLiteral("jshelper"), jshelper);
 
-    QHBoxLayout *hbox = new QHBoxLayout();
+//    QHBoxLayout *hbox = new QHBoxLayout();
 
-    hbox->addWidget(polyView);
+//    hbox->addWidget(polyView);
 
-    ui->groupBox_CS->setLayout(hbox);
+//    ui->groupBox_CS->setLayout(hbox);
 
-    QString urlStr = QString("%0/%1").arg(qApp->applicationDirPath(),
-                                          OutputDialog::PATH_POLY_HTML);
+//    QString urlStr = QString("%0/%1").arg(qApp->applicationDirPath(),
+//                                          OutputDialog::PATH_POLY_HTML);
 
-    //Better to use qApp->applicationDirPath coz it gives the location of executable
+//    //Better to use qApp->applicationDirPath coz it gives the location of executable
 
-    polyView->setUrl(urlStr);
+//    polyView->setUrl(urlStr);
 
     plotDialog = new PlotDialog();
 
@@ -54,7 +54,7 @@ QString OutputDialog::PATH_POLY_HTML="screen1.html";
 OutputDialog::~OutputDialog()
 {
     delete ui;
-    webchannel->deregisterObject(jshelper);
+    //webchannel->deregisterObject(jshelper);
 }
 
 std::shared_ptr<ControlSystem> OutputDialog::cs() const
@@ -76,7 +76,7 @@ void OutputDialog::displayEquation(QString equation){
     //QString eq = m_cs->getCsTF()->getTfEquation();
     //qDebug()<<"Equation to display at output: "<< eq ;
     //if (!this->isHidden())
-    jshelper->displayEquation(equation);
+    //jshelper->displayEquation(equation);
 }
 
 

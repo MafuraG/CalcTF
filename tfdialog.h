@@ -43,10 +43,10 @@ private:
     Ui::TfDialog *ui;
     std::shared_ptr<TransferFunction> m_tf;
     std::shared_ptr<TransferFunction> m_tf_original;
-    QWebEngineView *polyView;
-    QWebChannel *webchannel;
+    //QWebEngineView *polyView;
+    //QWebChannel *webchannel;
     void clearUI();
-    JsHelper *jshelper;
+    //JsHelper *jshelper;
 };
 
 #endif // TFDIALOG_H
