@@ -5,10 +5,10 @@
 #include "transferfunction.h"
 
 #include <QDialog>
-#include <QWebEngineView>
+//#include <QWebEngineView>
 #include <memory>
 #include <QString>
-#include <QWebChannel>
+//#include <QWebChannel>
 
 namespace Ui {
 class TfDialog;

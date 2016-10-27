@@ -45,6 +45,8 @@ public:
     void simplifyTF();
     std::complex<double> dumpKValues(double xr, double xi);    
     QList<std::shared_ptr<Root> > getRootLocus(Polynomial &N, Polynomial &D, double &K_max, QList<QList<std::shared_ptr<Root> > > &locus);
+    QList<std::shared_ptr<Root> > getRootLocus1(Polynomial &N, Polynomial &D, double &K_max, QList<QList<std::shared_ptr<Root> > > &locus);
+
 private:
 
 
@@ -67,8 +69,14 @@ private:
     unsigned int factorial(unsigned int n);
     std::complex<double> getPointOnCircle(double radius, double radians, std::complex<double> &center);
     double getRootsInCircle(Polynomial &N, Polynomial &D,
-                                          double radius,double K, std::complex<double> center,
-                                            std::complex<double> &root);
+                                    double radius,double K, std::complex<double> center,
+                            std::complex<double> &root);
+    QList<double> getRootsInCircle(Polynomial &N, Polynomial &D,
+                                   double radius, double K, std::complex<double> center,
+                                   QList<std::complex<double> > &roots);
+    void fillSegments(Polynomial &N, Polynomial &D, double &K_max, double &K, std::complex<double> &center, QList<std::shared_ptr<Root> > &segment, QList<QList<std::shared_ptr<Root> > > &locus, bool conjugate);
+    int getClosestRoot(QList<std::shared_ptr<Root> > &roots, std::complex<double> &root);
+    QList<std::shared_ptr<Root> > getIntersectPoints(Polynomial &N, Polynomial &D);
 };
 
 TransferFunction operator *(const TransferFunction &tr0, const TransferFunction &tr1);

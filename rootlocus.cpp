@@ -38,6 +38,16 @@ double RootLocus::K() const
     return m_K;
 }
 
+QList<QList<std::shared_ptr<Root> > > RootLocus::locus1() const
+{
+    return m_locus1;
+}
+
+void RootLocus::setLocus1(const QList<QList<std::shared_ptr<Root> > > &locus1)
+{
+    m_locus1 = locus1;
+}
+
 double RootLocus::calculateDelta(QList<std::shared_ptr<Root>> &rootList1 , QList<std::shared_ptr<Root>> &rootList2)
 {
     if (rootList1.count() != rootList2.count()) return 0;
@@ -69,8 +79,8 @@ void RootLocus::calculateLocus1()
     double K_max;
 
 
-    QList<QList<std::shared_ptr<Root>>> rlocus;
-    m_locus = m_tf->getRootLocus(N,D,K_max,rlocus);
+    //QList<QList<std::shared_ptr<Root>>> rlocus;
+    m_locus = m_tf->getRootLocus1(N,D,K_max,m_locus1);
 
     m_poleR = m_tf->getRootsClosedLoop(0);
     m_zeroR = m_tf->getRootsClosedLoop(K_max);

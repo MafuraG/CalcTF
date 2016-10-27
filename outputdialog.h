@@ -8,8 +8,8 @@
 #include "mainwindow.h"
 
 #include <QDialog>
-#include <QWebChannel>
-#include <QWebEngineView>
+//#include <QWebChannel>
+//#include <QWebEngineView>
 #include <controlsystem.h>
 #include <memory>
 
@@ -33,7 +33,7 @@ public:
     void setTfdiag(TfDialog *value);
 
 public slots:
-    void displayEquation(QString equation);
+    void displayEquation();
     void on_tfdialog_closed(bool status);
     void on_mainwindow_closed(bool status);
 

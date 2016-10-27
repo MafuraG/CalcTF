@@ -60,13 +60,13 @@ void TfDialog::setTf(const std::shared_ptr<TransferFunction> &tf)
 
 void TfDialog::on_buttonBox_accepted()
 {
-    //emit tfDialogueClosed(true);
+    emit tfDialogueClosed(true);
 }
 
 void TfDialog::on_buttonBox_rejected()
 {
     m_tf = m_tf_original;
-   // emit tfDialogueClosed(false);
+    emit tfDialogueClosed(false);
 }
 
 
@@ -82,6 +82,7 @@ void TfDialog::on_lineEdit_zeroP_editingFinished()
 
 //    if (err != "" ) ui->label_error->setText(err);
 //    ui->label_error->setText(m_tf->getTfEquation());
+     ui->TF_textEdit->setText(m_tf->getTfEquation());
 }
 
 void TfDialog::on_lineEdit_poleP_editingFinished()
@@ -96,6 +97,7 @@ void TfDialog::on_lineEdit_poleP_editingFinished()
 
 //    if (err != "" ) ui->label_error->setText(err);
 //    ui->label_error->setText(m_tf->getTfEquation());
+    ui->TF_textEdit->setText(m_tf->getTfEquation());
 }
 
 void TfDialog::clearUI(){

@@ -68,15 +68,16 @@ void OutputDialog::setCs(const std::shared_ptr<ControlSystem> &cs)
     ui->tableView_roots->setModel(m_cs->getRootTModel());
     m_cs->simplifyCS();
     m_cs->updateRootTable();
-    displayEquation(m_cs->getCsTF()->getTfEquation());
+    displayEquation();
 }
 
-void OutputDialog::displayEquation(QString equation){
+void OutputDialog::displayEquation(){
     //auto ts = m_cs->getCsTF();
-    //QString eq = m_cs->getCsTF()->getTfEquation();
+    QString eq = m_cs->getCsTF()->getTfEquation();
     //qDebug()<<"Equation to display at output: "<< eq ;
     //if (!this->isHidden())
     //jshelper->displayEquation(equation);
+    ui->CS_textEdit->setText(eq);
 }
 
 
@@ -117,6 +118,7 @@ void OutputDialog::on_tfdialog_closed(bool status)
         //qDebug()<<"Display Equation signal to be called";
         //emit displayEquation(m_cs->getCsTF()->getTfEquation());
         //jshelper->displayEquation(equation);
+        displayEquation();
     }
 }
 

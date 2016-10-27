@@ -282,10 +282,10 @@ QString TransferFunction::getPolynomialEquation(const std::shared_ptr<Polynomial
                }
            }else{
                if (i > 1){
-                    term = QString("%0*%1^%2").arg(c).arg(plane).arg(i);
+                    term = QString("%0%1^%2").arg(c).arg(plane).arg(i);
                }
                if (i == 1){
-                   term = QString("%0*%1").arg(c).arg(plane);
+                   term = QString("%0%1").arg(c).arg(plane);
                }
                if (i == 0){
                    term = QString("%0").arg(c);
@@ -458,15 +458,33 @@ QList<std::shared_ptr<Root> > TransferFunction::getRootsClosedLoop(Polynomial &N
     return rList;
 }
 
+QList<std::shared_ptr<Root> > TransferFunction::getIntersectPoints(Polynomial &N,Polynomial &D)
+
+{
+    QList<std::shared_ptr<Root>> rList;
+
+    Polynomial dN = N.Derivative();
+    Polynomial dD = D.Derivative();
+
+    Polynomial p = (N*dD) - (dN*D);
+
+    rList = getRoots(p);
+
+    return rList;
+}
+
 QList<std::shared_ptr<Root>> TransferFunction::getRootLocus(Polynomial &N,Polynomial &D,double & K_max,
                                                             QList<QList<std::shared_ptr<Root>>> &locus)
 {
-    auto poleRoots = getRootsClosedLoop(N,D,0);
-    double R = 1;
-    int MAX_COUNT = 500, count = 0;
+    auto poleRoots = getRootsClosedLoop(N,D,0);    
+    double R = 0.01;
+    int MAX_COUNT = 1000, count = 0;
     for (int i = 0; i < poleRoots.count(); i++){
         QList<std::shared_ptr<Root>> segment;
         auto c = poleRoots[i]->complexRoot();
+
+
+
         std::complex<double>  c_next;
         double K = 0;
         count = 0;
@@ -475,11 +493,11 @@ QList<std::shared_ptr<Root>> TransferFunction::getRootLocus(Polynomial &N,Polyno
             std::shared_ptr<Root> root = std::make_shared<Root>(c.real(),c.imag());
             segment.append(root);
             c = c_next;
-            if (K != 0 || K > K_max ) K_max = K;
+            if (K != 0 && K > K_max ) K_max = K;
             count++;
-            qDebug()<<"K = "<<K;
+            //qDebug()<<"K = "<<K;
         }while (K != 0 && count < MAX_COUNT);
-        qDebug()<<"K = "<<K;
+        //qDebug()<<"K = "<<K;
         locus.append(segment);
     }
     QList<std::shared_ptr<Root>> result;
@@ -489,6 +507,91 @@ QList<std::shared_ptr<Root>> TransferFunction::getRootLocus(Polynomial &N,Polyno
         }
     }
     return result;
+}
+
+QList<std::shared_ptr<Root>> TransferFunction::getRootLocus1(Polynomial &N,Polynomial &D,double & K_max,
+                                                            QList<QList<std::shared_ptr<Root>>> &locus)
+{
+    auto poleRoots = getRootsClosedLoop(N,D,0);
+    auto intersectRoots = getIntersectPoints(N,D);
+    QList<double> calculatedRoots;
+    bool conjugateRoot = false;
+
+    poleRoots.append(intersectRoots);
+
+    for (int i = 0; i < poleRoots.count(); i++){
+        auto c = poleRoots[i]->complexRoot();
+        double K = 0;
+        QList<std::shared_ptr<Root>> segment;
+        qDebug()<<"Generating locus for pole starting at :"<< poleRoots[i]->real()<<" "<<poleRoots[i]->imaginary()<<"i";
+        fillSegments(N,D,K_max,K,c,segment,locus,conjugateRoot);
+    }
+
+
+    QList<std::shared_ptr<Root>> result;
+    for(int i = 0; i < locus.count(); i++){
+        for (int j = 0; j < locus[i].count(); j++){
+            result.append(locus[i][j]);
+        }
+    }
+    return result;
+}
+
+void TransferFunction::fillSegments(Polynomial &N,Polynomial &D,double & K_max,double & K,
+                                   std::complex<double> &center,QList<std::shared_ptr<Root>> &segment,
+                                   QList<QList<std::shared_ptr<Root>>> &locus,bool conjugate)
+{
+    QList<double> Klist;
+    QList<std::complex<double>> roots;
+    int MAX_COUNT = 2000, count = 0;
+    double R = 0.001;
+    do{
+        Klist = getRootsInCircle(N,D,R,K,center,roots);
+        //qDebug()<<"Klist.count"<<Klist.count();
+        if (Klist.count() == 1){
+            //qDebug()<<"in first case";            
+            K = Klist[0];
+            //auto rlist = getRootsClosedLoop(N,D,K);
+            //int idx = getClosestRoot(rlist,roots[0]);
+            auto r_ = roots[0];
+            //if (idx > -1 && idx < rlist.count())  r_ = rlist[idx]->complexRoot();
+            qDebug()<<"1root :"<<r_.real()<<" "<<r_.imag()<<"i";
+            std::shared_ptr<Root> newroot = std::make_shared<Root>(r_.real(),r_.imag());
+            segment.append(newroot);
+            center = r_;
+            if (K != 0 && K > K_max ) K_max = K;
+        }else{
+            for (int i = 0; i< Klist.count(); i++){
+                //qDebug()<<"in case 2";
+                QList<std::shared_ptr<Root>> newsegment;
+                center = roots[i];
+                //qDebug()<<"root :"<<roots[i].real()<<" "<<roots[i].imag()<<"i";
+                K = Klist[i];
+                //auto rlist = getRootsClosedLoop(N,D,K);
+                //int idx = getClosestRoot(rlist,roots[i]);
+                auto r_ = roots[i];
+                //if (idx > -1 && idx < rlist.count())  r_ = rlist[idx]->complexRoot();
+                qDebug()<<"2root :"<<r_.real()<<" "<<r_.imag()<<"i"<<" count:"<<Klist.count()<<" K = "<<K;
+                center = r_;
+                fillSegments(N,D,K_max,K,center,newsegment,locus,false);
+            }
+        }
+        count++;
+        //qDebug()<<"K = "<<K<<" counter ="<<count; Klist.count()> 0 &&
+    }while (K < 10 &&  count < MAX_COUNT);
+
+    locus.append(segment);
+
+    if (conjugate == true){
+        QList<std::shared_ptr<Root>> segment1;
+        for(int i = 0; i < segment.count(); i++){
+            auto r_ = segment[i];
+            std::shared_ptr<Root> newroot = std::make_shared<Root>(r_->real(),-1*r_->imaginary());
+            segment1.append(newroot);
+        }
+
+        locus.append(segment1);
+    }
 }
 
 double TransferFunction::getRootsInCircle(Polynomial &N, Polynomial &D,
@@ -502,11 +605,11 @@ double TransferFunction::getRootsInCircle(Polynomial &N, Polynomial &D,
     for(;;){
         root = getPointOnCircle(radius,rad,center);
         auto k_c = calculateK(N,D,root);
-        double K_new;
-        if (std::abs(k_c.imag()) < 0.00000001 || k_c.real() > 0 ) K_new = k_c.real();
+        double K_new = 0;
+        if (std::abs(k_c.imag()) < 0.001 && k_c.real() > 0 ) K_new = k_c.real();
 
         if (K_new > K) {
-            //qDebug()<<"K_new =>"<< K_new;            
+            //qDebug()<<"K_new =>"<< K_new;
             return K_new;
         }
         i++;
@@ -518,6 +621,70 @@ double TransferFunction::getRootsInCircle(Polynomial &N, Polynomial &D,
     }
 
     return 0;
+}
+
+QList<double> TransferFunction::getRootsInCircle(Polynomial &N, Polynomial &D,
+                                            double radius,double K, std::complex<double> center,
+                                            QList<std::complex<double>> &roots)
+{
+    int MAX_POINTS = 500;
+    double rad = 0;
+    double step = (2 * M_PI)/ MAX_POINTS;
+    int i = 0;
+    QList<double>res_K;
+    roots.clear();
+    for(;;){
+        auto root = getPointOnCircle(radius,rad,center);
+        auto k_c = calculateK(N,D,root);
+        double K_new = 0;
+        if (std::abs(k_c.imag())  < 0.000001 && k_c.real() > 0 ) K_new = k_c.real();
+
+        if (K_new > K) {
+           //qDebug()<<"K_new =>"<< K_new;
+            if (res_K.count() > 0){
+                double prev_K = res_K[res_K.count() - 1];
+                //eliminate 'identical' roots (roots closer than 0.001)
+                if (std::abs(K_new - prev_K) > 0.0001){
+                   res_K.append(K_new);
+                   roots.append(root);
+                }
+//                res_K.append(K_new);
+//                roots.append(root);
+            }else{
+                res_K.append(K_new);
+                //qDebug()<<"Roots in circle: New k = "<<K_new;
+                roots.append(root);
+            }
+        }
+        i++;
+        rad = step* i;
+
+        if (rad > 2 * M_PI) {
+            //qDebug()<<"break";
+            //qDebug()<<"Number of roots in circle: "<<roots.count();
+            break;
+        }
+    }
+
+    return res_K;
+}
+
+
+
+int TransferFunction::getClosestRoot(QList<std::shared_ptr<Root>> &roots, std::complex<double> &root)
+{
+    int index = -1;
+    double diff = 0, diff_prev = 0;
+    for(int i = 0; i < roots.count(); i++){
+        diff_prev = diff;
+        auto r1 = roots[i]->complexRoot();
+        auto r2 = root;
+        diff = norm(r2 - r1);
+        if (i == 0 && diff < 0.0001) index = i;
+        if (i > 0 && diff < diff_prev) index = i;
+    }
+
+    return index;
 }
 
 std::complex<double> TransferFunction::getPointOnCircle(double radius, double radians, std::complex<double> &center)
