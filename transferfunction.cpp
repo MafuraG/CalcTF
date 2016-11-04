@@ -551,10 +551,10 @@ void TransferFunction::fillSegments(Polynomial &N,Polynomial &D,double & K_max,d
         if (Klist.count() == 1){
             //qDebug()<<"in first case";            
             K = Klist[0];
-            //auto rlist = getRootsClosedLoop(N,D,K);
-            //int idx = getClosestRoot(rlist,roots[0]);
+            auto rlist = getRootsClosedLoop(N,D,K);
+            int idx = getClosestRoot(rlist,roots[0]);
             auto r_ = roots[0];
-            //if (idx > -1 && idx < rlist.count())  r_ = rlist[idx]->complexRoot();
+            if (idx > -1 && idx < rlist.count())  r_ = rlist[idx]->complexRoot();
             qDebug()<<"1root :"<<r_.real()<<" "<<r_.imag()<<"i";
             std::shared_ptr<Root> newroot = std::make_shared<Root>(r_.real(),r_.imag());
             segment.append(newroot);
@@ -565,12 +565,12 @@ void TransferFunction::fillSegments(Polynomial &N,Polynomial &D,double & K_max,d
                 //qDebug()<<"in case 2";
                 QList<std::shared_ptr<Root>> newsegment;
                 center = roots[i];
-                //qDebug()<<"root :"<<roots[i].real()<<" "<<roots[i].imag()<<"i";
+                qDebug()<<"root :"<<roots[i].real()<<" "<<roots[i].imag()<<"i";
                 K = Klist[i];
-                //auto rlist = getRootsClosedLoop(N,D,K);
-                //int idx = getClosestRoot(rlist,roots[i]);
+                auto rlist = getRootsClosedLoop(N,D,K);
+                int idx = getClosestRoot(rlist,roots[i]);
                 auto r_ = roots[i];
-                //if (idx > -1 && idx < rlist.count())  r_ = rlist[idx]->complexRoot();
+                if (idx > -1 && idx < rlist.count())  r_ = rlist[idx]->complexRoot();
                 qDebug()<<"2root :"<<r_.real()<<" "<<r_.imag()<<"i"<<" count:"<<Klist.count()<<" K = "<<K;
                 center = r_;
                 fillSegments(N,D,K_max,K,center,newsegment,locus,false);
@@ -644,7 +644,7 @@ QList<double> TransferFunction::getRootsInCircle(Polynomial &N, Polynomial &D,
             if (res_K.count() > 0){
                 double prev_K = res_K[res_K.count() - 1];
                 //eliminate 'identical' roots (roots closer than 0.001)
-                if (std::abs(K_new - prev_K) > 0.0001){
+                if (std::abs(K_new - prev_K) > 0.001){
                    res_K.append(K_new);
                    roots.append(root);
                 }
