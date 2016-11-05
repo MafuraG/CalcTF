@@ -77,6 +77,8 @@ private:
     void fillSegments(Polynomial &N, Polynomial &D, double &K_max, double &K, std::complex<double> &center, QList<std::shared_ptr<Root> > &segment, QList<QList<std::shared_ptr<Root> > > &locus, bool conjugate);
     int getClosestRoot(QList<std::shared_ptr<Root> > &roots, std::complex<double> &root);
     QList<std::shared_ptr<Root> > getIntersectPoints(Polynomial &N, Polynomial &D);
+    bool rlistContains(const QList<std::complex<double> > &rlist, std::complex<double> root);
+    bool klistContains(const QList<double> &klist, double k);
 };
 
 TransferFunction operator *(const TransferFunction &tr0, const TransferFunction &tr1);
