@@ -8,7 +8,7 @@ RootLocusGraph::RootLocusGraph(std::shared_ptr<TransferFunction> &tf)
 
 void RootLocusGraph::plotGraph()
 {
-    plotRootLocus1();
+    plotRootLocus();
 }
 
 void RootLocusGraph::plotRootLocus()
