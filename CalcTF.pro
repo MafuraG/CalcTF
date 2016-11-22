@@ -15,7 +15,6 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
     Polynomial.cpp \
     PolynomialRootFinder.cpp \
     tfdialog.cpp \
@@ -30,9 +29,12 @@ SOURCES += main.cpp\
     qcustomplot.cpp \
     customgraph.cpp \
     rootlocusgraph.cpp \
-    rootlocus.cpp
+    rootlocus.cpp \
+    intervaltf.cpp \
+    tfcoefficient.cpp \
+    toolbox.cpp
 
-HEADERS  += mainwindow.h \
+HEADERS  += \
     Polynomial.h \
     PolynomialRootFinder.h \
     tfdialog.h \
@@ -47,9 +49,12 @@ HEADERS  += mainwindow.h \
     qcustomplot.h \
     customgraph.h \
     rootlocusgraph.h \
-    rootlocus.h
+    rootlocus.h \
+    intervaltf.h \
+    tfcoefficient.h \
+    toolbox.h
 
-FORMS    += mainwindow.ui \
+FORMS    += \
     tfdialog.ui \
     outputdialog.ui \
     plotdialog.ui

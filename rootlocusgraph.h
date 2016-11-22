@@ -2,6 +2,7 @@
 #define ROOTLOCUSGRAPH_H
 
 #include "customgraph.h"
+#include "intervaltf.h"
 #include "rootlocus.h"
 #include <memory>
 
@@ -10,7 +11,7 @@
 class RootLocusGraph : public CustomGraph
 {
 public:
-    RootLocusGraph(std::shared_ptr<TransferFunction> &tf);
+    RootLocusGraph(std::shared_ptr<IntervalTF> &tf);
     void plotGraph() override;
 private:
     void plotRootLocus();

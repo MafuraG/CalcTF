@@ -5,7 +5,6 @@
 #include "plotdialog.h"
 #include "customgraph.h"
 #include "tfdialog.h"
-#include "mainwindow.h"
 
 #include <QDialog>
 //#include <QWebChannel>
@@ -34,14 +33,13 @@ public:
 
 public slots:
     void displayEquation();
-    void on_tfdialog_closed(bool status);
-    void on_mainwindow_closed(bool status);
+    void on_tfdialog_closed(bool status);    
 
 private slots:
 
     void on_pushButton_rootlocus_clicked();
 
-    void on_pushButton_constructTF_clicked();
+
 
     void on_pushButton_EditTF_clicked();
 
@@ -56,8 +54,7 @@ private:
     std::shared_ptr<CustomGraph> m_cgraph;
 
     TfDialog *tfdiag;
-    OutputDialog *outdialog;
-    MainWindow *mainwindow;
+    OutputDialog *outdialog;    
 };
 
 #endif // OUTPUTDIALOG_H

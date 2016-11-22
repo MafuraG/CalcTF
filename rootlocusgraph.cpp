@@ -1,6 +1,6 @@
 #include "rootlocusgraph.h"
 
-RootLocusGraph::RootLocusGraph(std::shared_ptr<TransferFunction> &tf)
+RootLocusGraph::RootLocusGraph(std::shared_ptr<IntervalTF> &tf)
 {
     m_locus = std::make_shared<RootLocus>();
     m_locus->setTf(tf);

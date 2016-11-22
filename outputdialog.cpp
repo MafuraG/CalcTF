@@ -9,44 +9,18 @@ OutputDialog::OutputDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
-//    polyView = new QWebEngineView(this);
-
-//    webchannel = new QWebChannel(polyView->page());
-
-//    polyView->page()->setWebChannel(webchannel);
-
-//    jshelper = new JsHelper();
-
-//    webchannel->registerObject(QStringLiteral("jshelper"), jshelper);
-
-//    QHBoxLayout *hbox = new QHBoxLayout();
-
-//    hbox->addWidget(polyView);
-
-//    ui->groupBox_CS->setLayout(hbox);
-
-//    QString urlStr = QString("%0/%1").arg(qApp->applicationDirPath(),
-//                                          OutputDialog::PATH_POLY_HTML);
-
-//    //Better to use qApp->applicationDirPath coz it gives the location of executable
-
-//    polyView->setUrl(urlStr);
-
     plotDialog = new PlotDialog();
 
 
     tfdiag = new TfDialog();
-    mainwindow = new MainWindow();
-    //outdialog = new OutputDialog();
-    //connect(btype,&BuildingType::run_calculations,this,&MainWindow::run_calculations);
-    connect(tfdiag,&TfDialog::tfDialogueClosed,mainwindow,&MainWindow::on_tfdialog_closed);
-    connect(tfdiag,&TfDialog::tfDialogueClosed,this,&OutputDialog::on_tfdialog_closed);
-    connect(mainwindow,&MainWindow::on_mainwindow_closed,this,&OutputDialog::on_mainwindow_closed);
 
-    mainwindow->setTfdiag(tfdiag);
-    m_cs = std::make_shared<ControlSystem>();
-    mainwindow->setCs(m_cs);
-    //mainwindow->setOutdialog(this);
+    //outdialog = new OutputDialog()
+
+    connect(tfdiag,&TfDialog::tfDialogueClosed,this,&OutputDialog::on_tfdialog_closed);
+
+
+
+
 }
 
 QString OutputDialog::PATH_POLY_HTML="screen1.html";
@@ -66,7 +40,7 @@ void OutputDialog::setCs(const std::shared_ptr<ControlSystem> &cs)
 {
     m_cs = cs;    
     ui->tableView_roots->setModel(m_cs->getRootTModel());
-    m_cs->simplifyCS();
+    //m_cs->simplifyCS();
     m_cs->updateRootTable();
     displayEquation();
 }
@@ -86,18 +60,13 @@ void OutputDialog::displayEquation(){
 void OutputDialog::on_pushButton_rootlocus_clicked()
 {
     //display root locus plot of given transfer function
-    std::shared_ptr<TransferFunction> tf = m_cs->getCsTF();
+    std::shared_ptr<IntervalTF> tf = m_cs->getCsTF();
     m_cgraph = std::make_shared<RootLocusGraph>(tf);
     plotDialog->setCustomGraph(m_cgraph.get());
     plotDialog->show();
 }
 
-void OutputDialog::on_pushButton_constructTF_clicked()
-{
-    //Call mainwindow
-    mainwindow->setCs(m_cs);
-    mainwindow->show();
-}
+
 
 void OutputDialog::on_pushButton_EditTF_clicked()
 {
@@ -122,15 +91,5 @@ void OutputDialog::on_tfdialog_closed(bool status)
     }
 }
 
-void OutputDialog::on_mainwindow_closed(bool status)
-{
-    if (status){
-        //update cs
-        //m_cs->setCsTF();
-        this->setCs(mainwindow->getCs());
-        //qDebug()<<"Display Equation signal to be called";
-        //emit displayEquation(m_cs->getCsTF()->getTfEquation());
-        //jshelper->displayEquation(equation);
-    }
-}
+
 

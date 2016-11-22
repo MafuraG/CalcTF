@@ -3,6 +3,7 @@
 
 #include "jshelper.h"
 #include "transferfunction.h"
+#include "intervaltf.h"
 
 #include <QDialog>
 //#include <QWebEngineView>
@@ -22,8 +23,8 @@ public:
     explicit TfDialog(QWidget *parent = 0);
     ~TfDialog();
 
-    std::shared_ptr<TransferFunction> tf() const;
-    void setTf(const std::shared_ptr<TransferFunction> &tf);
+    std::shared_ptr<IntervalTF> tf() const;
+    void setTf(const std::shared_ptr<IntervalTF> &tf);
     
     static QString PATH_POLY_HTML;
 
@@ -41,8 +42,8 @@ private slots:
 
 private:
     Ui::TfDialog *ui;
-    std::shared_ptr<TransferFunction> m_tf;
-    std::shared_ptr<TransferFunction> m_tf_original;
+    std::shared_ptr<IntervalTF> m_tf;
+    std::shared_ptr<IntervalTF> m_tf_original;
     //QWebEngineView *polyView;
     //QWebChannel *webchannel;
     void clearUI();
