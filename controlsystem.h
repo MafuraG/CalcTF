@@ -18,8 +18,8 @@ public:
     void updateRootTable();
 
 
-    std::shared_ptr<IntervalTF> getCsTF() const;
-    void setCsTF(const std::shared_ptr<IntervalTF> &csTF);
+    std::shared_ptr<IntervalTF> getCsTF() ;
+    void setCsTF(std::shared_ptr<IntervalTF> csTF);
 
 private:
 

@@ -2,7 +2,8 @@
 
 ControlSystem::ControlSystem()
 {    
-    m_rootTModel = new RootTableModel();    
+    m_rootTModel = new RootTableModel();
+    m_csTF = std::make_shared<IntervalTF>();
 }
 
 RootTableModel *ControlSystem::getRootTModel() const
@@ -28,12 +29,12 @@ void ControlSystem::updateRootTable()
     //m_csTF->get
 }
 
-std::shared_ptr<IntervalTF> ControlSystem::getCsTF() const
+std::shared_ptr<IntervalTF> ControlSystem::getCsTF()
 {
     return m_csTF;
 }
 
-void ControlSystem::setCsTF(const std::shared_ptr<IntervalTF> &csTF)
+void ControlSystem::setCsTF(std::shared_ptr<IntervalTF> csTF)
 {
     m_csTF = csTF;
 }

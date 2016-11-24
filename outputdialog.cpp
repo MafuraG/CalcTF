@@ -18,8 +18,7 @@ OutputDialog::OutputDialog(QWidget *parent) :
 
     connect(tfdiag,&TfDialog::tfDialogueClosed,this,&OutputDialog::on_tfdialog_closed);
 
-
-
+    m_cs = std::shared_ptr<ControlSystem>();
 
 }
 
@@ -90,6 +89,8 @@ void OutputDialog::on_tfdialog_closed(bool status)
         displayEquation();
     }
 }
+
+
 
 
 

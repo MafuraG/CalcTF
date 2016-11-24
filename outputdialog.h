@@ -38,10 +38,7 @@ public slots:
 private slots:
 
     void on_pushButton_rootlocus_clicked();
-
-
-
-    void on_pushButton_EditTF_clicked();
+    void on_pushButton_EditTF_clicked();    
 
 private:
     Ui::OutputDialog *ui;
