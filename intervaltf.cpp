@@ -113,10 +113,13 @@ QString IntervalTF::getStr(const QList<TfCoeff> &c)
             res +=QString("%0..%1 ").arg(c[i].lowerV()).arg(c[i].upperV());
         }
     }
+
+    return res;
 }
 
 void IntervalTF::purseString(const QString value, QList<TfCoeff> &coeffList)
 {
+    if (value.isEmpty()) return;
     QString res = value.trimmed();
     QStringList tokens = res.split(' ');
 
@@ -128,28 +131,33 @@ void IntervalTF::purseString(const QString value, QList<TfCoeff> &coeffList)
         QString token = tokens[i];
         qDebug()<<token;
         QString c = "";
-        c.append(token[0]);
-        if (ToolBox::isNumber(c)){
-            double num;
-            i = ToolBox::readNumber(value,i,num);
-            if (upper == false){
-                TfCoeff coeff;
-                coeff.setUpperV(num);
-                coeff.setLowerV(num);
-                coeffList.append(coeff);
-            }else{
-                count = coeffList.count() - 1 ;
-                TfCoeff coeff = coeffList[count];
-                coeff.setUpperV(num);
-                upper = false;
+        int k = 0;
+        c.append(token[k]);
+        while (k < token.count()){
+            if (ToolBox::isNumber(c)){
+                double num;
+                k = ToolBox::readNumber(value,k,num);
+                if (upper == false){
+                    TfCoeff coeff;
+                    coeff.setUpperV(num);
+                    coeff.setLowerV(num);
+                    coeffList.append(coeff);
+                }else{
+                    count = coeffList.count() - 1 ;
+                    TfCoeff coeff = coeffList[count];
+                    coeff.setUpperV(num);
+                    upper = false;
+                }
+            }else {
+                if (c == "."){
+                    k++;
+                    upper = true;
+                }else{
+                    k++;
+                }
             }
-        }else {
-            if (c == "."){
-                i++;
-                upper = true;
-            }else{
-                i++;
-            }
+            c = "";
+            c.append(token[k]);
         }
     }
 }
@@ -211,6 +219,7 @@ void IntervalTF::generateTF(const QList<TfCoeff> &N,const QList<TfCoeff> &D,
                             QList<TransferFunction> &tfList)
 {
     tfList.clear();
+    if (N.count() == 0 || D.count() == 0) return;
     for (int i = 0; i < 4 ; i++){
         std::vector<double> vN;
         std::vector<double> vD;

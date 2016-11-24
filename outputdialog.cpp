@@ -18,7 +18,7 @@ OutputDialog::OutputDialog(QWidget *parent) :
 
     connect(tfdiag,&TfDialog::tfDialogueClosed,this,&OutputDialog::on_tfdialog_closed);
 
-    m_cs = std::shared_ptr<ControlSystem>();
+    m_cs = std::make_shared<ControlSystem>();
 
 }
 
