@@ -34,7 +34,7 @@ void RootLocusGraph::plotRootLocus()
     getXYvectors(m_locus->zeroR(),x,y);
     g->setData(x,y);
     g->setLineStyle(QCPGraph::lsNone);
-    QCPScatterStyle zeroStlye(QCPScatterStyle::ssCircle,Qt::green,8);
+    QCPScatterStyle zeroStlye(QCPScatterStyle::ssCircle,Qt::green,6);
     g->setScatterStyle(zeroStlye);
 
     //Draw poles

@@ -36,7 +36,7 @@ QString IntervalTF::getTfEquation(const QString &plane)
     QString nstr = getCoeffEq(m_numerator,plane);
     QString dstr = getCoeffEq(m_denomenator,plane);
 
-    QString tfeq = QString("(%0)/(%1)").arg(nstr).arg(dstr);
+    QString tfeq = QString("%0 / %1").arg(nstr).arg(dstr);
 
     return tfeq;
 }
@@ -65,7 +65,7 @@ QList<std::shared_ptr<Root> > IntervalTF::getRootLocus()
 
 QString IntervalTF::getCoeffEq(const QList<TfCoeff> &p, const QString &plane)
 {
-    QString polyStr = "(";
+    QString polyStr;
 
     if (p.count() == 1) return QString("%0..%1").arg(p[0].lowerV()).arg(p[0].upperV());
     for(int i = p.count() - 1 ; i >= 0 ; i--){
@@ -91,13 +91,11 @@ QString IntervalTF::getCoeffEq(const QList<TfCoeff> &p, const QString &plane)
         }
 
        if (c.lowerV() > 0 && i != p.count() - 1){
-           term = QString("+%0").arg(term);
+           term = QString(" + %0").arg(term);
        }
 
        polyStr += term;
-    }
-
-    polyStr += ") ";
+    }   
 
     return polyStr;
 }
@@ -119,45 +117,31 @@ QString IntervalTF::getStr(const QList<TfCoeff> &c)
 
 void IntervalTF::purseString(const QString value, QList<TfCoeff> &coeffList)
 {
+    coeffList.clear();
     if (value.isEmpty()) return;
     QString res = value.trimmed();
-    QStringList tokens = res.split(' ');
+    QStringList tokens = res.split(' ');    
 
-    int i = 0;
-    int count;
-    bool upper = false;
+    int i = 0;    
     qDebug()<<"-=-----tokens------=-";
     while (i < tokens.count()){
-        QString token = tokens[i];
+        QString token = tokens[i++];
         qDebug()<<token;
-        QString c = "";
-        int k = 0;
-        c.append(token[k]);
-        while (k < token.count()){
-            if (ToolBox::isNumber(c)){
-                double num;
-                k = ToolBox::readNumber(value,k,num);
-                if (upper == false){
-                    TfCoeff coeff;
-                    coeff.setUpperV(num);
-                    coeff.setLowerV(num);
-                    coeffList.append(coeff);
-                }else{
-                    count = coeffList.count() - 1 ;
-                    TfCoeff coeff = coeffList[count];
-                    coeff.setUpperV(num);
-                    upper = false;
-                }
-            }else {
-                if (c == "."){
-                    k++;
-                    upper = true;
-                }else{
-                    k++;
-                }
-            }
-            c = "";
-            c.append(token[k]);
+        QStringList numList = token.split("..");
+        if (numList.count() == 1){
+            QString num = numList[0].trimmed();
+            TfCoeff coeff;
+            coeff.setLowerV(num.toDouble());
+            coeff.setUpperV(num.toDouble());
+            coeffList.append(coeff);
+        }
+        if (numList.count() == 2){
+            QString low = numList[0].trimmed();
+            QString high = numList[1].trimmed();
+            TfCoeff coeff;
+            coeff.setLowerV(low.toDouble());
+            coeff.setUpperV(high.toDouble());
+            coeffList.append(coeff);
         }
     }
 }

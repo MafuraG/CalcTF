@@ -378,7 +378,7 @@ QList<std::shared_ptr<Root>> TransferFunction::getRootLocus(Polynomial &N,Polyno
     //poleRoots.append(intersectRoots);
 
     int Max_Points = 500;
-    K_max = 5;
+    K_max = 6;
     double step = K_max/Max_Points;
     double k=0;
 
@@ -427,7 +427,7 @@ int TransferFunction::getClosestRoot(QList<std::shared_ptr<Root>> &roots, std::c
         auto r1 = roots[i]->complexRoot();
         auto r2 = root;
         diff = norm(r2 - r1);
-        qDebug()<<"diff : "<< diff;
+        //qDebug()<<"diff : "<< diff;
         if (i == 0 ) index = i;
         if (i > 0 && diff < diff_prev) index = i;
     }

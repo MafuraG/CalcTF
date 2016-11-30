@@ -10,6 +10,7 @@ public:
     static bool isNumber(const QString &val){
         bool ok;
         val.toDouble(&ok);
+        if (val == "-" || val =="+") ok = true;
         return ok;
     }
 

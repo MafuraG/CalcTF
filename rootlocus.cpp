@@ -73,7 +73,7 @@ void RootLocus::calculateLocus()
 {
     m_locus.clear();
 
-    double K_max = 10;
+    double K_max = 5;
 
     //QList<QList<std::shared_ptr<Root>>> rlocus;
     m_locus = m_tf->getRootLocus();

@@ -13,6 +13,7 @@ double TfCoeff::upperV() const
 
 void TfCoeff::setUpperV(double upperV)
 {
+    //if (upperV < this->lowerV()) return;
     m_upperV = upperV;
 }
 
@@ -23,5 +24,6 @@ double TfCoeff::lowerV() const
 
 void TfCoeff::setLowerV(double lowerV)
 {
+    //if (lowerV > this->upperV()) return;
     m_lowerV = lowerV;
 }
