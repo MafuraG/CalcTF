@@ -38,6 +38,7 @@ public:
 
     QString getTfEquation(const QString &plane="s");
     QList<std::shared_ptr<Root>> getRootsClosedLoop(const double K = 1.0);
+    QList<std::shared_ptr<Root>> getRootsClosedLoop(const bool max_K);
 
     bool isEmpty();
     void simplifyTF();

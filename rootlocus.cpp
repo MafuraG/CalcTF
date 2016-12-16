@@ -71,15 +71,13 @@ double RootLocus::calculateDelta(QList<std::shared_ptr<Root>> &rootList1 , QList
 
 void RootLocus::calculateLocus()
 {
-    m_locus.clear();
-
-    double K_max = 5;
+    m_locus.clear();    
 
     //QList<QList<std::shared_ptr<Root>>> rlocus;
     m_locus = m_tf->getRootLocus();
 
-    m_poleR = m_tf->getRootsClosedLoop(0);
-    m_zeroR = m_tf->getRootsClosedLoop(K_max);
+    m_poleR = m_tf->getRootsClosedLoop(false);
+    m_zeroR = m_tf->getRootsClosedLoop(true);
 }
 
 

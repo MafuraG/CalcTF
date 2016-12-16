@@ -344,6 +344,21 @@ QList<std::shared_ptr<Root> > TransferFunction::getRootsClosedLoop(const double 
     return rList;
 }
 
+QList<std::shared_ptr<Root> > TransferFunction::getRootsClosedLoop(const bool max_K)
+{
+    Polynomial R;
+    Polynomial *D = m_polesPoly.get();
+    Polynomial *N = m_zerosPoly.get();
+    QList<std::shared_ptr<Root>> rList;
+
+    if (max_K) R = (*N);
+    else R = (*D);
+
+    rList = getRoots(R);
+
+    return rList;
+}
+
 QList<std::shared_ptr<Root> > TransferFunction::getRootsClosedLoop(Polynomial &N,Polynomial &D,
                                                                    const double K)
 {
@@ -378,7 +393,7 @@ QList<std::shared_ptr<Root>> TransferFunction::getRootLocus(Polynomial &N,Polyno
     //poleRoots.append(intersectRoots);
 
     int Max_Points = 500;
-    K_max = 6;
+    K_max = 20;
     double step = K_max/Max_Points;
     double k=0;
 
