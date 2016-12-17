@@ -14,14 +14,14 @@ void IntervalTF::setN(const QString value)
 {
     purseString(value, m_numerator);
     //generateTF(m_numerator,m_denomenator,m_tfList);
-    generateTF1(m_numerator,m_denomenator,m_tfList);
+    //generateTF1(m_numerator,m_denomenator,m_tfList);
 }
 
 void IntervalTF::setD(const QString value)
 {
     purseString(value, m_denomenator);
     //generateTF(m_numerator,m_denomenator,m_tfList);
-    generateTF1(m_numerator,m_denomenator,m_tfList);
+    //generateTF1(m_numerator,m_denomenator,m_tfList);
 }
 
 QString IntervalTF::getN()
@@ -48,7 +48,7 @@ QList<std::shared_ptr<Root> > IntervalTF::getRootsClosedLoop(const double K)
 {
     QList<std::shared_ptr<Root> > rlist;
     //generateTF(m_numerator,m_denomenator,m_tfList);
-    //generateTF1(m_numerator,m_denomenator,m_tfList);
+    generateTF1(m_numerator,m_denomenator,m_tfList);
 
     for(int i = 0 ; i < m_tfList.count(); i++){
         auto r = m_tfList[i].getRootsClosedLoop(K);
@@ -61,7 +61,7 @@ QList<std::shared_ptr<Root> > IntervalTF::getRootsClosedLoop(const bool max_K)
 {
     QList<std::shared_ptr<Root> > rlist;
     //generateTF(m_numerator,m_denomenator,m_tfList);
-    //generateTF1(m_numerator,m_denomenator,m_tfList);
+    generateTF1(m_numerator,m_denomenator,m_tfList);
 
     for(int i = 0 ; i < m_tfList.count(); i++){
         auto r = m_tfList[i].getRootsClosedLoop(max_K);
@@ -75,7 +75,7 @@ QList<std::shared_ptr<Root> > IntervalTF::getRootLocus()
     QList<std::shared_ptr<Root> > rlist;
 
     //generateTF(m_numerator,m_denomenator,m_tfList);
-    //generateTF1(m_numerator,m_denomenator,m_tfList);
+    generateTF1(m_numerator,m_denomenator,m_tfList);
     for(int i = 0 ; i < m_tfList.count(); i++){
         auto r = m_tfList[i].getRootLocus();
         rlist.append(r);
@@ -240,7 +240,7 @@ void IntervalTF::generateTF(const QList<TfCoeff> &N,const QList<TfCoeff> &D,
 
 void IntervalTF::generateTF1(const QList<TfCoeff> &N, const QList<TfCoeff> &D, QList<TransferFunction> &tfList)
 {
-    int max_tf = 20;
+    int max_tf = 4000;
     tfList.clear();
     if (N.count() == 0 || D.count() == 0) return;
     for (int i = 0; i < max_tf ; i++){
@@ -271,15 +271,25 @@ void IntervalTF::generateRandVector(const QList<TfCoeff> &c,std::vector<double> 
     {
         double min = c[i].lowerV();
         double max = c[i].upperV();
-        v[i] = IntervalTF::generateRandDouble(min,max);
-        qDebug()<<"<<"<<min<<">>"<<v[i]<<"<<"<<max<<">>";
+        v[i] = generateRandDouble(min,max);
+        //qDebug()<<"<<"<<min<<">>"<<v[i]<<"<<"<<max<<">>";
     }
 }
 
 double IntervalTF::generateRandDouble(double min, double max)
 {
-    std::uniform_real_distribution<double> unif(min,max);
-    std::default_random_engine re;
-    double res = unif(re);
+    //std::normal_distribution<double> dist(min,max);
+    std::uniform_real_distribution<double> dist(min,max);
+    //Mersenne Twister: Good quality random number generator
+    std::mt19937 rng;
+    //Initialize with non-deterministic seeds
+    rng.seed(std::random_device{}());
+    static int count = 1;
+
+    double res = dist(rng);
+    for(int i = 0 ; i < count; i++){
+        res = dist(rng);
+    }
+    count++;
     return res;
 }

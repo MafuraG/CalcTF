@@ -33,7 +33,7 @@ private:
     void generateTF1(const QList<TfCoeff> &N, const QList<TfCoeff> &D, QList<TransferFunction> &Tf);
     QString getStr(const QList<TfCoeff> &c);
     QString getCoeffEq(const QList<TfCoeff> &p, const QString &plane);
-    static double generateRandDouble(double min, double max);
+    double generateRandDouble(double min, double max);
     void generateRandVector(const QList<TfCoeff> &c, std::vector<double> &v);
 };
 
