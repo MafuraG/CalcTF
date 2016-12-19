@@ -8,6 +8,7 @@ RootLocusGraph::RootLocusGraph(std::shared_ptr<IntervalTF> &tf)
 
 void RootLocusGraph::plotGraph()
 {
+    m_locus->calculateLocus();
     plotRootLocus();
 }
 
@@ -19,22 +20,22 @@ void RootLocusGraph::plotRootLocus()
     plot->clearGraphs();
     //draw locus
     QVector<double> x,y;
-    getXYvectors(m_locus->locus(),x,y);
-    QCPGraph *g = plot->addGraph();
-    //QCPDataMap *data = getQCPDataMap(m_locus->locus());
-    g->setData(x,y);
-    g->setLineStyle(QCPGraph::lsNone);
-    QCPScatterStyle locusStlye(QCPScatterStyle::ssDisc,Qt::black,2);
-    g->setScatterStyle(locusStlye);
-    //qDebug()<<"Number of locus poits to be plotted:"<<data->size();
+//    getXYvectors(m_locus->locus(),x,y);
+//    QCPGraph *g = plot->addGraph();
+//    //QCPDataMap *data = getQCPDataMap(m_locus->locus());
+//    g->setData(x,y);
+//    g->setLineStyle(QCPGraph::lsNone);
+//    QCPScatterStyle locusStlye(QCPScatterStyle::ssCircle,Qt::black,2);
+//    g->setScatterStyle(locusStlye);
+//    //qDebug()<<"Number of locus poits to be plotted:"<<data->size();
 
     //Draw zeros   
-    g = plot->addGraph();
+    QCPGraph *g = plot->addGraph();
     //data = getQCPDataMap(m_locus->zeroR());
     getXYvectors(m_locus->zeroR(),x,y);
     g->setData(x,y);
     g->setLineStyle(QCPGraph::lsNone);
-    QCPScatterStyle zeroStlye(QCPScatterStyle::ssCircle,Qt::green,3);
+    QCPScatterStyle zeroStlye(QCPScatterStyle::ssCircle,Qt::black,2);
     g->setScatterStyle(zeroStlye);
 
     //Draw poles
@@ -43,7 +44,7 @@ void RootLocusGraph::plotRootLocus()
     getXYvectors(m_locus->poleR(),x,y);
     g->setData(x,y);
     g->setLineStyle(QCPGraph::lsNone);
-    QCPScatterStyle poleStlye(QCPScatterStyle::ssCross,Qt::red,2);
+    QCPScatterStyle poleStlye(QCPScatterStyle::ssCross,Qt::black,2);
     g->setScatterStyle(poleStlye);
 
     setXAxisLabel("Real");

@@ -44,7 +44,7 @@ std::shared_ptr<IntervalTF> RootLocus::tf() const
 void RootLocus::setTf(const std::shared_ptr<IntervalTF> &tf)
 {
     m_tf = tf;
-    calculateLocus();
+    //calculateLocus();
 }
 
 double RootLocus::calculateDelta(QList<std::shared_ptr<Root>> &rootList1 , QList<std::shared_ptr<Root>> &rootList2)
@@ -74,7 +74,8 @@ void RootLocus::calculateLocus()
     m_locus.clear();    
 
     //QList<QList<std::shared_ptr<Root>>> rlocus;
-    m_locus = m_tf->getRootLocus();
+    //m_locus = m_tf->getRootLocus();
+    m_tf->generateTF();
 
     m_poleR = m_tf->getRootsClosedLoop(false);
     m_zeroR = m_tf->getRootsClosedLoop(true);

@@ -23,6 +23,7 @@ public:
 
     std::shared_ptr<IntervalTF> tf() const;
     void setTf(const std::shared_ptr<IntervalTF> &tf);
+    void calculateLocus();
 
 private:
     std::shared_ptr<IntervalTF> m_tf;
@@ -31,7 +32,7 @@ private:
     QList<std::shared_ptr<Root>> m_locus;
     QList<QList<std::shared_ptr<Root>>> m_locus1;
 
-    void calculateLocus();
+
 
     double m_K;
     double calculateDelta(QList<std::shared_ptr<Root> > &rootList1, QList<std::shared_ptr<Root> > &rootList2);

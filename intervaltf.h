@@ -21,6 +21,7 @@ public:
     QList<std::shared_ptr<Root>> getRootsClosedLoop(const bool max_K);
     QList<std::shared_ptr<Root> > getRootLocus();
 
+    void generateTF();
 private:
     void purseString(const QString value, QList<TfCoeff> &coeffList);    
 
@@ -34,7 +35,8 @@ private:
     QString getStr(const QList<TfCoeff> &c);
     QString getCoeffEq(const QList<TfCoeff> &p, const QString &plane);
     double generateRandDouble(double min, double max);
-    void generateRandVector(const QList<TfCoeff> &c, std::vector<double> &v);
+    void generateRandVector(const QList<TfCoeff> &c, std::vector<double> &v, int nth_tf);
+    double generateRandDouble1(double min, double max, int nth_tf);
 };
 
 #endif // INTERVALTF_H

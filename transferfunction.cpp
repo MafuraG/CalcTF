@@ -392,7 +392,7 @@ QList<std::shared_ptr<Root>> TransferFunction::getRootLocus(Polynomial &N,Polyno
 
     //poleRoots.append(intersectRoots);
 
-    int Max_Points = 100;
+    int Max_Points = 1;
     double cut_off = 5;
     double step = 0.1;
     double k=0;
@@ -425,8 +425,6 @@ QList<std::shared_ptr<Root>> TransferFunction::getRootLocus(Polynomial &N,Polyno
 
         if (count >  Max_Points) break;
     }
-
-
 
     QList<std::shared_ptr<Root>> result;
     for(int i = 0; i < locus.count(); i++){
