@@ -40,7 +40,7 @@ void OutputDialog::setCs(const std::shared_ptr<ControlSystem> &cs)
     m_cs = cs;    
     ui->tableView_roots->setModel(m_cs->getRootTModel());
     //m_cs->simplifyCS();
-    m_cs->updateRootTable();
+    //m_cs->updateRootTable();
     displayEquation();
 }
 

@@ -344,7 +344,7 @@ QList<std::shared_ptr<Root> > TransferFunction::getRootsClosedLoop(const double 
     return rList;
 }
 
-QList<std::shared_ptr<Root> > TransferFunction::getRootsClosedLoop(const bool max_K)
+QList<std::shared_ptr<Root> > TransferFunction::getRootsClosedLoop(const bool max_K) const
 {
     Polynomial R;
     Polynomial *D = m_polesPoly.get();
@@ -357,6 +357,11 @@ QList<std::shared_ptr<Root> > TransferFunction::getRootsClosedLoop(const bool ma
     rList = getRoots(R);
 
     return rList;
+}
+
+QList<std::shared_ptr<Root> > TransferFunction::getRootsClosedLoop1() const
+{
+    return getRootsClosedLoop(getMaxK());
 }
 
 QList<std::shared_ptr<Root> > TransferFunction::getRootsClosedLoop(Polynomial &N,Polynomial &D,
@@ -468,7 +473,7 @@ unsigned int TransferFunction::factorial(unsigned int n)
     return ret;
 }
 
-QList<std::shared_ptr<Root>> TransferFunction::getRoots(Polynomial &P){
+QList<std::shared_ptr<Root>> TransferFunction::getRoots(Polynomial &P) const{
     QList<std::shared_ptr<Root>> rList;
 
     QVector<double> real_vect;

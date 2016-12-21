@@ -37,19 +37,25 @@ public:
     void setPolesPoly(std::shared_ptr<Polynomial> &polesPoly);    
 
     QString getTfEquation(const QString &plane="s");
-    QList<std::shared_ptr<Root>> getRootsClosedLoop(const double K = 1.0);
-    QList<std::shared_ptr<Root>> getRootsClosedLoop(const bool max_K);
+    QList<std::shared_ptr<Root>> getRootsClosedLoop(const double K);
+    QList<std::shared_ptr<Root>> getRootsClosedLoop(const bool max_K) const;
 
     bool isEmpty();
+
     void simplifyTF();
     std::complex<double> dumpKValues(double xr, double xi);
     QList<std::shared_ptr<Root> > getRootLocus();
 
+    void setMaxK(bool value){m_maxK = value;}
+    bool getMaxK() const {return m_maxK;}
+
+    QList<std::shared_ptr<Root> > getRootsClosedLoop1() const;
 private:
 
 
     std::shared_ptr<Polynomial> m_zerosPoly;
     std::shared_ptr<Polynomial> m_polesPoly;
+    bool m_maxK;
     QString setPolynomialFomStr(const QString &polyStr, std::shared_ptr<Polynomial> &p, QString *errString = nullptr);
     QString getPolynomialStr(QString &polyStr, const std::shared_ptr<Polynomial> p);
 //    QString getPolynomialStr(const std::shared_ptr<Polynomial> p);
@@ -58,7 +64,7 @@ private:
     QString getPolynomialVectorStr(const Polynomial &p);    
     void initTS();
     double getRootAt(QVector<double> &vect, int i);
-    QList<std::shared_ptr<Root> > getRoots(Polynomial &P);
+    QList<std::shared_ptr<Root> > getRoots(Polynomial &P) const;
 
     QList<std::shared_ptr<Root> > getRootsClosedLoop(Polynomial &N, Polynomial &D, const double K);    
     std::complex<double> evaluateComplex(const Polynomial &P, std::complex<double> p);
