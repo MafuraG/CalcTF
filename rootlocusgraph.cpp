@@ -20,17 +20,17 @@ void RootLocusGraph::plotRootLocus()
     plot->clearGraphs();
     //draw locus
     QVector<double> x,y;
-//    getXYvectors(m_locus->locus(),x,y);
-//    QCPGraph *g = plot->addGraph();
-//    //QCPDataMap *data = getQCPDataMap(m_locus->locus());
-//    g->setData(x,y);
-//    g->setLineStyle(QCPGraph::lsNone);
-//    QCPScatterStyle locusStlye(QCPScatterStyle::ssCircle,Qt::black,2);
-//    g->setScatterStyle(locusStlye);
-//    //qDebug()<<"Number of locus poits to be plotted:"<<data->size();
+    getXYvectors(m_locus->locus(),x,y);
+    QCPGraph *g = plot->addGraph();
+    //QCPDataMap *data = getQCPDataMap(m_locus->locus());
+    g->setData(x,y);
+    g->setLineStyle(QCPGraph::lsNone);
+    QCPScatterStyle locusStlye(QCPScatterStyle::ssCircle,Qt::black,2);
+    g->setScatterStyle(locusStlye);
+    //qDebug()<<"Number of locus poits to be plotted:"<<data->size();
 
     //Draw zeros   
-    QCPGraph *g = plot->addGraph();
+    g = plot->addGraph();
     //data = getQCPDataMap(m_locus->zeroR());
     getXYvectors(m_locus->zeroR(),x,y);
     g->setData(x,y);

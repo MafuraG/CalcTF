@@ -1,7 +1,6 @@
 #include "intervaltf.h"
 
 #include <QStringList>
-#include "toolbox.h"
 #include <QDebug>
 #include <random>
 #include <QtConcurrent>
@@ -85,11 +84,13 @@ QList<std::shared_ptr<Root> > IntervalTF::getRootLocus()
 
     //generateTF(m_numerator,m_denomenator,m_tfList);
     //generateTF1(m_numerator,m_denomenator,m_tfList);
-    for(int i = 0 ; i < m_tfList.count(); i++){
-        auto r = m_tfList[i].getRootLocus();
-        rlist.append(r);
-    }
-    return rlist;
+//    for(int i = 0 ; i < m_tfList.count(); i++){
+//        auto r = m_tfList[i].getRootLocus();
+//        rlist.append(r);
+//    }
+
+    auto r = QtConcurrent::mappedReduced(m_tfList,mapLocusFunction,reduceLocusFunction);
+    return rlist = r.result();
 }
 
 
@@ -255,47 +256,18 @@ void IntervalTF::generateTF(const QList<TfCoeff> &N,const QList<TfCoeff> &D,
 
 void IntervalTF::generateTF1(const QList<TfCoeff> &N, const QList<TfCoeff> &D, QList<TransferFunction> &tfList)
 {
-    int max_tf = 100;
+    int max_tf = 500000;
     tfList.clear();
+
     if (N.count() == 0 || D.count() == 0) return;
-    for (int i = 0; i < max_tf ; i++){
-        std::vector<double> vN;
-        std::vector<double> vD;
-        generateRandVector(N,vN,i);
-        generateRandVector(D,vD,i);
-
-        Polynomial pN = Polynomial(&vN[0],vN.size());
-        Polynomial pD = Polynomial(&vD[0],vD.size());
-
-        TransferFunction tf(pN,pD);
+    for (int i = 0; i < max_tf ; i++){        
+        TransferFunction tf;
         tfList.append(tf);
     }
-    //QList<TransferFunction> tlist1;
-    //tlist1.append(tfList);
 
-    //generateTF(N,D,tfList);
+    QtConcurrent::map(tfList,mapTF(N,D));
 
-    //tfList.append(tlist1);
     qDebug()<<"Generated transfer functions";
-}
-
-void IntervalTF::generateRandVector(const QList<TfCoeff> &c,std::vector<double> &v, int nth_tf){
-
-    v.assign(c.size(),0);
-
-    for (unsigned int i = 0 ; i < v.size(); i++)
-    {
-        double min = c[i].lowerV();
-        double max = c[i].upperV();
-
-        //v[i] = generateRandDouble(min,max,nth_tf);
-//        if (i = 1 )
-          v[i] = ToolBox::random<double>(min,max);
-//        else
-//            v[i] = max;
-        qDebug()<<"<<"<<min<<">>"<<v[i]<<"<<"<<max<<">>";
-    }
-
 }
 
 double IntervalTF::generateRandDouble(double min, double max, int nth_tf)

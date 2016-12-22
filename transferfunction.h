@@ -20,7 +20,8 @@ public:
     TransferFunction(const QString &zeroStr, const QString &poleStr);
     TransferFunction(const std::string &zeroStr, const std::string &poleStr);
 
-    void setTF(const QString &zeroStr, const QString &poleStr);    
+    void setTF(const QString &zeroStr, const QString &poleStr);
+    void setTF(const Polynomial &zeroP, const Polynomial &poleP);
 
     QString setZerosPoly(const QString &polyStr,QString *errString = nullptr);
     QString setPolesPoly(const QString &polyStr,QString *errString = nullptr);
@@ -44,12 +45,13 @@ public:
 
     void simplifyTF();
     std::complex<double> dumpKValues(double xr, double xi);
-    QList<std::shared_ptr<Root> > getRootLocus();
+    QList<std::shared_ptr<Root> > getRootLocus() const;
 
     void setMaxK(bool value){m_maxK = value;}
     bool getMaxK() const {return m_maxK;}
 
     QList<std::shared_ptr<Root> > getRootsClosedLoop1() const;
+
 private:
 
 
@@ -66,12 +68,12 @@ private:
     double getRootAt(QVector<double> &vect, int i);
     QList<std::shared_ptr<Root> > getRoots(Polynomial &P) const;
 
-    QList<std::shared_ptr<Root> > getRootsClosedLoop(Polynomial &N, Polynomial &D, const double K);    
+    QList<std::shared_ptr<Root> > getRootsClosedLoop(Polynomial &N, Polynomial &D, const double K) const;
     std::complex<double> evaluateComplex(const Polynomial &P, std::complex<double> p);
     unsigned int factorial(unsigned int n);
 
-    int getClosestRoot(QList<std::shared_ptr<Root> > &roots, std::complex<double> &root);
-    QList<std::shared_ptr<Root> > getRootLocus(Polynomial &N, Polynomial &D, double &K_max, QList<QList<std::shared_ptr<Root> > > &locus);
+    int getClosestRoot(QList<std::shared_ptr<Root> > &roots, std::complex<double> &root) const;
+    QList<std::shared_ptr<Root> > getRootLocus(Polynomial &N, Polynomial &D, double &K_max, QList<QList<std::shared_ptr<Root> > > &locus) const;
 
 };
 

@@ -1,5 +1,8 @@
 #ifndef TOOLBOX_H
 #define TOOLBOX_H
+#include "tfcoefficient.h"
+
+#include <QList>
 #include <QString>
 #include <random>
 
@@ -49,6 +52,20 @@ public:
         return dist(gen, typename dist_type::param_type{from, to});
     }
 
+    static void generateRandVector(const QList<TfCoeff> &c,std::vector<double> &v){
+
+        v.assign(c.size(),0);
+
+        for (unsigned int i = 0 ; i < v.size(); i++)
+        {
+            double min = c[i].lowerV();
+            double max = c[i].upperV();
+
+            v[i] = ToolBox::random<double>(min,max);
+
+            //qDebug()<<"<<"<<min<<">>"<<v[i]<<"<<"<<max<<">>";
+        }
+    }
 };
 
 #endif // TOOLBOX_H

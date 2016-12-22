@@ -58,6 +58,13 @@ void TransferFunction::initTS()
     m_polesPoly = std::make_shared<Polynomial>();
 }
 
+void TransferFunction::setTF(const Polynomial &zeroP, const Polynomial &poleP)
+{
+    QString zeroStr = getPolynomialVectorStr(zeroP);
+    QString poleStr = getPolynomialVectorStr(poleP);
+
+    setTF(zeroStr,poleStr);
+}
 
 void TransferFunction::setTF(const QString &zeroStr, const QString &poleStr)
 {
@@ -365,7 +372,7 @@ QList<std::shared_ptr<Root> > TransferFunction::getRootsClosedLoop1() const
 }
 
 QList<std::shared_ptr<Root> > TransferFunction::getRootsClosedLoop(Polynomial &N,Polynomial &D,
-                                                                   const double K)
+                                                                   const double K) const
 {
     QList<std::shared_ptr<Root>> rList;
 
@@ -376,7 +383,7 @@ QList<std::shared_ptr<Root> > TransferFunction::getRootsClosedLoop(Polynomial &N
     return rList;
 }
 
-QList<std::shared_ptr<Root> > TransferFunction::getRootLocus()
+QList<std::shared_ptr<Root> > TransferFunction::getRootLocus() const
 {
     Polynomial N = *m_zerosPoly;
     Polynomial D = *m_polesPoly;
@@ -390,14 +397,14 @@ QList<std::shared_ptr<Root> > TransferFunction::getRootLocus()
 }
 
 QList<std::shared_ptr<Root>> TransferFunction::getRootLocus(Polynomial &N,Polynomial &D,double & K_max,
-                                                            QList<QList<std::shared_ptr<Root>>> &locus)
+                                                            QList<QList<std::shared_ptr<Root>>> &locus) const
 {
     auto poleRoots = getRootsClosedLoop(N,D,0);
 
 
     //poleRoots.append(intersectRoots);
 
-    int Max_Points = 1;
+    int Max_Points = 400;
     double cut_off = 5;
     double step = 0.1;
     double k=0;
@@ -440,7 +447,7 @@ QList<std::shared_ptr<Root>> TransferFunction::getRootLocus(Polynomial &N,Polyno
     return result;
 }
 
-int TransferFunction::getClosestRoot(QList<std::shared_ptr<Root>> &roots, std::complex<double> &root)
+int TransferFunction::getClosestRoot(QList<std::shared_ptr<Root>> &roots, std::complex<double> &root) const
 {
     int index = -1;
     double diff = 0, diff_prev = 0;
