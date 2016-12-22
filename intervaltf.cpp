@@ -255,7 +255,7 @@ void IntervalTF::generateTF(const QList<TfCoeff> &N,const QList<TfCoeff> &D,
 
 void IntervalTF::generateTF1(const QList<TfCoeff> &N, const QList<TfCoeff> &D, QList<TransferFunction> &tfList)
 {
-    int max_tf = 30000;
+    int max_tf = 100;
     tfList.clear();
     if (N.count() == 0 || D.count() == 0) return;
     for (int i = 0; i < max_tf ; i++){
@@ -293,7 +293,7 @@ void IntervalTF::generateRandVector(const QList<TfCoeff> &c,std::vector<double> 
           v[i] = ToolBox::random<double>(min,max);
 //        else
 //            v[i] = max;
-        //qDebug()<<"<<"<<min<<">>"<<v[i]<<"<<"<<max<<">>";
+        qDebug()<<"<<"<<min<<">>"<<v[i]<<"<<"<<max<<">>";
     }
 
 }
