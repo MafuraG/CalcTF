@@ -35,32 +35,11 @@ private:
     void generateTF(const QList<TfCoeff> &N, const QList<TfCoeff> &D, QList<TransferFunction> &Tf);
     void generateTF1(const QList<TfCoeff> &N, const QList<TfCoeff> &D, QList<TransferFunction> &Tf);
     QString getStr(const QList<TfCoeff> &c);
-    QString getCoeffEq(const QList<TfCoeff> &p, const QString &plane);
-    double generateRandDouble(double min, double max, int nth_tf);    
-    double generateRandDouble1(double min, double max, int nth_tf);
-//    void reduce(QList<std::shared_ptr<Root> > &rlist, const QList<std::shared_ptr<Root> > &roots);
-//    QList<std::shared_ptr<Root> > mapFunction(const TransferFunction &tf);
+    QString getCoeffEq(const QList<TfCoeff> &p, const QString &plane);       
+
 };
 
-static QList<std::shared_ptr<Root> > mapFunction(const TransferFunction &tf){
-//    TransferFunction _tf(tf.getZeroVectorStr(),tf.getPolesVectorStr());
-//    _tf.setMaxK(tf.getMaxK());
-    return tf.getRootsClosedLoop1();
-}
 
-static void reduceFunction(QList<std::shared_ptr<Root> > &rlist, const QList<std::shared_ptr<Root> > &roots){
-    rlist.append(roots);
-}
-
-static QList<std::shared_ptr<Root> > mapLocusFunction(const TransferFunction &tf){
-//    TransferFunction _tf(tf.getZeroVectorStr(),tf.getPolesVectorStr());
-//    _tf.setMaxK(tf.getMaxK());
-    return tf.getRootLocus();
-}
-
-static void reduceLocusFunction(QList<std::shared_ptr<Root> > &rlist, const QList<std::shared_ptr<Root> > &roots){
-    rlist.append(roots);
-}
 
 struct mapTF{
     mapTF(const QList<TfCoeff> &N, const QList<TfCoeff> &D)

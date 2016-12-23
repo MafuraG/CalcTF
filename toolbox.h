@@ -1,6 +1,7 @@
 #ifndef TOOLBOX_H
 #define TOOLBOX_H
 #include "tfcoefficient.h"
+#include "transferfunction.h"
 
 #include <QList>
 #include <QString>
@@ -65,7 +66,27 @@ public:
 
             //qDebug()<<"<<"<<min<<">>"<<v[i]<<"<<"<<max<<">>";
         }
-    }
+    }    
 };
+
+static QList<std::shared_ptr<Root> > mapFunction(const TransferFunction &tf){
+//    TransferFunction _tf(tf.getZeroVectorStr(),tf.getPolesVectorStr());
+//    _tf.setMaxK(tf.getMaxK());
+    return tf.getRootsClosedLoop1();
+}
+
+static void reduceFunction(QList<std::shared_ptr<Root> > &rlist, const QList<std::shared_ptr<Root> > &roots){
+    rlist.append(roots);
+}
+
+static QList<std::shared_ptr<Root> > mapLocusFunction(const TransferFunction &tf){
+//    TransferFunction _tf(tf.getZeroVectorStr(),tf.getPolesVectorStr());
+//    _tf.setMaxK(tf.getMaxK());
+    return tf.getRootLocus();
+}
+
+static void reduceLocusFunction(QList<std::shared_ptr<Root> > &rlist, const QList<std::shared_ptr<Root> > &roots){
+    rlist.append(roots);
+}
 
 #endif // TOOLBOX_H

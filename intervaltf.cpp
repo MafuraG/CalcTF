@@ -72,8 +72,14 @@ QList<std::shared_ptr<Root> > IntervalTF::getRootsClosedLoop(const bool max_K)
         m_tfList[i].setMaxK(max_K);
     }
 
+    int mapReduceTime = 0;
+    QTime time;
+    time.start();
     auto r = QtConcurrent::mappedReduced(m_tfList,mapFunction,reduceFunction);
-    return rlist = r.result();
+    rlist = r.result();
+    mapReduceTime = time.elapsed();
+    qDebug() <<"Max K: "<<max_K<<" "<< "MapReduce" << mapReduceTime;
+    return rlist;
 }
 
 
@@ -88,9 +94,14 @@ QList<std::shared_ptr<Root> > IntervalTF::getRootLocus()
 //        auto r = m_tfList[i].getRootLocus();
 //        rlist.append(r);
 //    }
-
+    int mapReduceTime = 0;
+    QTime time;
+    time.start();
     auto r = QtConcurrent::mappedReduced(m_tfList,mapLocusFunction,reduceLocusFunction);
-    return rlist = r.result();
+    rlist = r.result();
+    mapReduceTime = time.elapsed();
+    qDebug() << "MapReduce" << mapReduceTime;
+    return rlist;
 }
 
 
@@ -154,10 +165,10 @@ void IntervalTF::purseString(const QString value, QList<TfCoeff> &coeffList)
     QStringList tokens = res.split(' ');    
 
     int i = 0;    
-    qDebug()<<"-=-----tokens------=-";
+    //qDebug()<<"-=-----tokens------=-";
     while (i < tokens.count()){
         QString token = tokens[i++];
-        qDebug()<<token;
+        //qDebug()<<token;
         QStringList numList = token.split("..");
         if (numList.count() == 1){
             QString num = numList[0].trimmed();
@@ -267,36 +278,11 @@ void IntervalTF::generateTF1(const QList<TfCoeff> &N, const QList<TfCoeff> &D, Q
 
     QtConcurrent::map(tfList,mapTF(N,D));
 
-    qDebug()<<"Generated transfer functions";
+    //qDebug()<<"Generated transfer functions";
 }
 
-double IntervalTF::generateRandDouble(double min, double max, int nth_tf)
-{
-    //std::normal_distribution<double> dist(min,max);
-    std::uniform_real_distribution<double> dist(min,max);
-    //Mersenne Twister: Good quality random number generator
-    static std::mt19937 rng;
-    //Initialize with non-deterministic seeds
-    rng.seed(std::random_device{}());
 
-    static int count = 1;
 
-    double res = dist(rng);
-    for(int i = 0 ; i < count; i++){
-        res = dist(rng);
-    }
-    count++;
-    return res;
-}
 
-double IntervalTF::generateRandDouble1(double min, double max, int nth_tf)
-{
-    int max_points = 1000;
-
-    double step = (max - min)/max_points;
-    double res = min + step*nth_tf;
-
-    return res;
-}
 
 

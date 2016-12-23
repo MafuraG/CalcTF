@@ -131,20 +131,6 @@ void RootLocusGraph::getXYvectors(const QList<std::shared_ptr<Root>> &roots, QVe
     }
 }
 
-QCPDataMap *RootLocusGraph::getQCPDataMap(const QList<std::shared_ptr<Root>> &roots){
-    QCPDataMap *map = new QCPDataMap();
-
-    int size = roots.size();
-
-    for (int i = 0; i < size ; i++){
-        Root *r = roots[i].get();
-        QCPData d = QCPData(r->real(),r->imaginary());
-        map->insert(r->real(),d);
-    }
-
-    return map;
-}
-
 void RootLocusGraph::split_locus_by_quadrants(QVector<double> &x, QVector<double> &y, QList<QVector<double> > &quadrants)
 {
     if (x.size() != y.size()) return;
