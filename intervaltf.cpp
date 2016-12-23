@@ -267,7 +267,7 @@ void IntervalTF::generateTF(const QList<TfCoeff> &N,const QList<TfCoeff> &D,
 
 void IntervalTF::generateTF1(const QList<TfCoeff> &N, const QList<TfCoeff> &D, QList<TransferFunction> &tfList)
 {
-    int max_tf = 500000;
+    int max_tf = 1000000;
     tfList.clear();
 
     if (N.count() == 0 || D.count() == 0) return;

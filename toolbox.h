@@ -86,6 +86,7 @@ static QList<std::shared_ptr<Root> > mapLocusFunction(const TransferFunction &tf
 }
 
 static void reduceLocusFunction(QList<std::shared_ptr<Root> > &rlist, const QList<std::shared_ptr<Root> > &roots){
+
     rlist.append(roots);
 }
 

@@ -497,6 +497,7 @@ QList<std::shared_ptr<Root>> TransferFunction::getRoots(Polynomial &P) const{
 
     for(int i = 0 ; i < num_of_roots; i++){
         auto r = std::make_shared<Root>(real_vect[i],imag_vect[i]);
+        if (std::abs(r->real()) > 3 ) continue;
         rList.append(r);
     }
 
