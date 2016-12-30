@@ -338,11 +338,11 @@ QString TransferFunction::getTfEquation(const QString &plane)
     return tf_eq;
 }
 
-QList<std::shared_ptr<Root> > TransferFunction::getRootsClosedLoop(const double K)
+QVector<std::shared_ptr<Root>> TransferFunction::getRootsClosedLoop(const double K)
 {
     Polynomial *D = m_polesPoly.get();
     Polynomial *N = m_zerosPoly.get();
-    QList<std::shared_ptr<Root>> rList;
+    QVector<std::shared_ptr<Root>> rList;
 
     Polynomial R = (*D) + K*(*N);
 
@@ -351,12 +351,12 @@ QList<std::shared_ptr<Root> > TransferFunction::getRootsClosedLoop(const double 
     return rList;
 }
 
-QList<std::shared_ptr<Root> > TransferFunction::getRootsClosedLoop(const bool max_K) const
+QVector<std::shared_ptr<Root>> TransferFunction::getRootsClosedLoop(const bool max_K) const
 {
     Polynomial R;
     Polynomial *D = m_polesPoly.get();
     Polynomial *N = m_zerosPoly.get();
-    QList<std::shared_ptr<Root>> rList;
+    QVector<std::shared_ptr<Root>> rList;
 
     if (max_K) R = (*N);
     else R = (*D);
@@ -366,15 +366,15 @@ QList<std::shared_ptr<Root> > TransferFunction::getRootsClosedLoop(const bool ma
     return rList;
 }
 
-QList<std::shared_ptr<Root> > TransferFunction::getRootsClosedLoop1() const
+QVector<std::shared_ptr<Root>> TransferFunction::getRootsClosedLoop1() const
 {
     return getRootsClosedLoop(getMaxK());
 }
 
-QList<std::shared_ptr<Root> > TransferFunction::getRootsClosedLoop(Polynomial &N,Polynomial &D,
+QVector<std::shared_ptr<Root>> TransferFunction::getRootsClosedLoop(Polynomial &N,Polynomial &D,
                                                                    const double K) const
 {
-    QList<std::shared_ptr<Root>> rList;
+    QVector<std::shared_ptr<Root>> rList;
 
     Polynomial R = D + K * N;
 
@@ -383,21 +383,21 @@ QList<std::shared_ptr<Root> > TransferFunction::getRootsClosedLoop(Polynomial &N
     return rList;
 }
 
-QList<std::shared_ptr<Root> > TransferFunction::getRootLocus() const
+QVector<std::shared_ptr<Root>> TransferFunction::getRootLocus() const
 {
     Polynomial N = *m_zerosPoly;
     Polynomial D = *m_polesPoly;
     double K_max;
-    QList<QList<std::shared_ptr<Root>>> locus;
-    QList<std::shared_ptr<Root>>result;
+    QList<QVector<std::shared_ptr<Root>>> locus;
+    QVector<std::shared_ptr<Root>>result;
 
     result = getRootLocus(N,D,K_max,locus);
 
     return result;
 }
 
-QList<std::shared_ptr<Root>> TransferFunction::getRootLocus(Polynomial &N,Polynomial &D,double & K_max,
-                                                            QList<QList<std::shared_ptr<Root>>> &locus) const
+QVector<std::shared_ptr<Root>> TransferFunction::getRootLocus(Polynomial &N,Polynomial &D,double & K_max,
+                                                            QList<QVector<std::shared_ptr<Root>>> &locus) const
 {
     auto poleRoots = getRootsClosedLoop(N,D,0);
 
@@ -410,7 +410,7 @@ QList<std::shared_ptr<Root>> TransferFunction::getRootLocus(Polynomial &N,Polyno
     double k=0;
 
     for (int i = 0; i < poleRoots.count(); i++){
-        QList<std::shared_ptr<Root>> segment;
+        QVector<std::shared_ptr<Root>> segment;
         segment.append(poleRoots[i]);
         locus.append(segment);
     }
@@ -419,7 +419,7 @@ QList<std::shared_ptr<Root>> TransferFunction::getRootLocus(Polynomial &N,Polyno
         if (count > 350) step = 10;
         k = step* count++;
         auto roots = getRootsClosedLoop(N,D,k);
-        QList<std::shared_ptr<Root>> rlist;
+        QVector<std::shared_ptr<Root>> rlist;
         rlist.clear();
         for(int i = 0; i < locus.count(); i++){
             auto seg = locus[i];
@@ -438,7 +438,7 @@ QList<std::shared_ptr<Root>> TransferFunction::getRootLocus(Polynomial &N,Polyno
         if (count >  Max_Points) break;
     }
 
-    QList<std::shared_ptr<Root>> result;
+    QVector<std::shared_ptr<Root>> result;
     for(int i = 0; i < locus.count(); i++){
         for (int j = 0; j < locus[i].count(); j++){
             result.append(locus[i][j]);
@@ -447,7 +447,7 @@ QList<std::shared_ptr<Root>> TransferFunction::getRootLocus(Polynomial &N,Polyno
     return result;
 }
 
-int TransferFunction::getClosestRoot(QList<std::shared_ptr<Root>> &roots, std::complex<double> &root) const
+int TransferFunction::getClosestRoot(QVector<std::shared_ptr<Root>> &roots, std::complex<double> &root) const
 {
     int index = -1;
     double diff = 0, diff_prev = 0;
@@ -480,14 +480,15 @@ unsigned int TransferFunction::factorial(unsigned int n)
     return ret;
 }
 
-QList<std::shared_ptr<Root>> TransferFunction::getRoots(Polynomial &P) const{
-    QList<std::shared_ptr<Root>> rList;
+QVector<std::shared_ptr<Root>> TransferFunction::getRoots(Polynomial &P) const{
+    QVector<std::shared_ptr<Root>> rList;
 
     QVector<double> real_vect;
     QVector<double>imag_vect;
 
     real_vect.resize(P.Degree());
     imag_vect.resize(P.Degree());
+    rList.resize(P.Degree());
 
     int num_of_roots = 0;
 
@@ -497,8 +498,8 @@ QList<std::shared_ptr<Root>> TransferFunction::getRoots(Polynomial &P) const{
 
     for(int i = 0 ; i < num_of_roots; i++){
         auto r = std::make_shared<Root>(real_vect[i],imag_vect[i]);
-        if (std::abs(r->real()) > 3 ) continue;
-        rList.append(r);
+        //if (std::abs(r->real()) > 3 ) continue;
+        rList[i] = r;
     }
 
     return rList;

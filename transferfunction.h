@@ -38,19 +38,19 @@ public:
     void setPolesPoly(std::shared_ptr<Polynomial> &polesPoly);    
 
     QString getTfEquation(const QString &plane="s");
-    QList<std::shared_ptr<Root>> getRootsClosedLoop(const double K);
-    QList<std::shared_ptr<Root>> getRootsClosedLoop(const bool max_K) const;
+    QVector<std::shared_ptr<Root>> getRootsClosedLoop(const double K);
+    QVector<std::shared_ptr<Root>> getRootsClosedLoop(const bool max_K) const;
 
     bool isEmpty();
 
     void simplifyTF();
     std::complex<double> dumpKValues(double xr, double xi);
-    QList<std::shared_ptr<Root> > getRootLocus() const;
+    QVector<std::shared_ptr<Root>> getRootLocus() const;
 
     void setMaxK(bool value){m_maxK = value;}
     bool getMaxK() const {return m_maxK;}
 
-    QList<std::shared_ptr<Root> > getRootsClosedLoop1() const;
+    QVector<std::shared_ptr<Root>> getRootsClosedLoop1() const;
 
 private:
 
@@ -66,14 +66,14 @@ private:
     QString getPolynomialVectorStr(const Polynomial &p);    
     void initTS();
     double getRootAt(QVector<double> &vect, int i);
-    QList<std::shared_ptr<Root> > getRoots(Polynomial &P) const;
+    QVector<std::shared_ptr<Root>> getRoots(Polynomial &P) const;
 
-    QList<std::shared_ptr<Root> > getRootsClosedLoop(Polynomial &N, Polynomial &D, const double K) const;
+    QVector<std::shared_ptr<Root>> getRootsClosedLoop(Polynomial &N, Polynomial &D, const double K) const;
     std::complex<double> evaluateComplex(const Polynomial &P, std::complex<double> p);
     unsigned int factorial(unsigned int n);
 
-    int getClosestRoot(QList<std::shared_ptr<Root> > &roots, std::complex<double> &root) const;
-    QList<std::shared_ptr<Root> > getRootLocus(Polynomial &N, Polynomial &D, double &K_max, QList<QList<std::shared_ptr<Root> > > &locus) const;
+    int getClosestRoot(QVector<std::shared_ptr<Root>> &roots, std::complex<double> &root) const;
+    QVector<std::shared_ptr<Root>> getRootLocus(Polynomial &N, Polynomial &D, double &K_max, QList<QVector<std::shared_ptr<Root>>> &locus) const;
 
 };
 

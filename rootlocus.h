@@ -10,16 +10,16 @@ class RootLocus
 public:
     RootLocus();    
 
-    QList<std::shared_ptr<Root> > poleR() const;
+    QVector<std::shared_ptr<Root>> poleR() const;
 
-    QList<std::shared_ptr<Root> > zeroR() const;
+    QVector<std::shared_ptr<Root>> zeroR() const;
 
-    QList<std::shared_ptr<Root> > locus() const;
+    QVector<std::shared_ptr<Root>> locus() const;
 
     double K() const;    
 
-    QList<QList<std::shared_ptr<Root> > > locus1() const;
-    void setLocus1(const QList<QList<std::shared_ptr<Root> > > &locus1);
+    QList<QVector<std::shared_ptr<Root>> > locus1() const;
+    void setLocus1(const QList<QVector<std::shared_ptr<Root>> > &locus1);
 
     std::shared_ptr<IntervalTF> tf() const;
     void setTf(const std::shared_ptr<IntervalTF> &tf);
@@ -27,15 +27,15 @@ public:
 
 private:
     std::shared_ptr<IntervalTF> m_tf;
-    QList<std::shared_ptr<Root>> m_poleR;
-    QList<std::shared_ptr<Root>> m_zeroR;
-    QList<std::shared_ptr<Root>> m_locus;
-    QList<QList<std::shared_ptr<Root>>> m_locus1;
+    QVector<std::shared_ptr<Root>> m_poleR;
+    QVector<std::shared_ptr<Root>> m_zeroR;
+    QVector<std::shared_ptr<Root>> m_locus;
+    QList<QVector<std::shared_ptr<Root>>> m_locus1;
 
 
 
     double m_K;
-    double calculateDelta(QList<std::shared_ptr<Root> > &rootList1, QList<std::shared_ptr<Root> > &rootList2);
+    double calculateDelta(QVector<std::shared_ptr<Root>> &rootList1, QVector<std::shared_ptr<Root>> &rootList2);
 };
 
 #endif // ROOTLOCUS_H

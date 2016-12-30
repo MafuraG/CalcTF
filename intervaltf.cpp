@@ -44,9 +44,9 @@ QString IntervalTF::getTfEquation(const QString &plane)
     return tfeq;
 }
 
-QList<std::shared_ptr<Root> > IntervalTF::getRootsClosedLoop(const double K)
+QVector<std::shared_ptr<Root>> IntervalTF::getRootsClosedLoop(const double K)
 {
-    QList<std::shared_ptr<Root> > rlist;
+    QVector<std::shared_ptr<Root>> rlist;
     //generateTF(m_numerator,m_denomenator,m_tfList);
     //generateTF1(m_numerator,m_denomenator,m_tfList);
 
@@ -58,9 +58,9 @@ QList<std::shared_ptr<Root> > IntervalTF::getRootsClosedLoop(const double K)
 }
 
 
-QList<std::shared_ptr<Root> > IntervalTF::getRootsClosedLoop(const bool max_K)
+QVector<std::shared_ptr<Root>> IntervalTF::getRootsClosedLoop(const bool max_K)
 {
-    QList<std::shared_ptr<Root> > rlist;
+    QVector<std::shared_ptr<Root>> rlist;
     //generateTF(m_numerator,m_denomenator,m_tfList);
    // generateTF1(m_numerator,m_denomenator,m_tfList);
 
@@ -71,6 +71,9 @@ QList<std::shared_ptr<Root> > IntervalTF::getRootsClosedLoop(const bool max_K)
     for(int i = 0 ; i < m_tfList.count(); i++){
         m_tfList[i].setMaxK(max_K);
     }
+    int max_size = m_tfList.count()*(m_tfList[0].polesPoly()->Degree());
+    qDebug()<<"Max size: "<<max_size <<""<< rlist.capacity();
+    rlist.reserve(max_size);
 
     int mapReduceTime = 0;
     QTime time;
@@ -78,15 +81,15 @@ QList<std::shared_ptr<Root> > IntervalTF::getRootsClosedLoop(const bool max_K)
     auto r = QtConcurrent::mappedReduced(m_tfList,mapFunction,reduceFunction);
     rlist = r.result();
     mapReduceTime = time.elapsed();
-    qDebug() <<"Max K: "<<max_K<<" "<< "MapReduce" << mapReduceTime;
+    qDebug() <<"Max K: "<<max_K<<" "<< "MapReduce" << mapReduceTime <<"size of result: "<<rlist.count();
     return rlist;
 }
 
 
 
-QList<std::shared_ptr<Root> > IntervalTF::getRootLocus()
+QVector<std::shared_ptr<Root>> IntervalTF::getRootLocus()
 {
-    QList<std::shared_ptr<Root> > rlist;
+    QVector<std::shared_ptr<Root>> rlist;
 
     //generateTF(m_numerator,m_denomenator,m_tfList);
     //generateTF1(m_numerator,m_denomenator,m_tfList);
@@ -247,7 +250,7 @@ void IntervalTF::generateTF()
 
 
 void IntervalTF::generateTF(const QList<TfCoeff> &N,const QList<TfCoeff> &D,
-                            QList<TransferFunction> &tfList)
+                            QVector<TransferFunction> &tfList)
 {
     tfList.clear();
     if (N.count() == 0 || D.count() == 0) return;
@@ -265,18 +268,21 @@ void IntervalTF::generateTF(const QList<TfCoeff> &N,const QList<TfCoeff> &D,
     }
 }
 
-void IntervalTF::generateTF1(const QList<TfCoeff> &N, const QList<TfCoeff> &D, QList<TransferFunction> &tfList)
+void IntervalTF::generateTF1(const QList<TfCoeff> &N, const QList<TfCoeff> &D, QVector<TransferFunction> &tfList)
 {
     int max_tf = 1000000;
-    tfList.clear();
+    tfList.resize(max_tf);
 
     if (N.count() == 0 || D.count() == 0) return;
-    for (int i = 0; i < max_tf ; i++){        
-        TransferFunction tf;
-        tfList.append(tf);
-    }
-
+//    for (int i = 0; i < max_tf ; i++){
+//        TransferFunction tf;
+//        tfList.append(tf);
+//    }
+    QTime time;
+    time.start();
     QtConcurrent::map(tfList,mapTF(N,D));
+    int fillVectTime = time.elapsed();
+    qDebug() << "Fill vector with random values :" << fillVectTime;
 
     //qDebug()<<"Generated transfer functions";
 }

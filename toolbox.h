@@ -69,23 +69,24 @@ public:
     }    
 };
 
-static QList<std::shared_ptr<Root> > mapFunction(const TransferFunction &tf){
+
+static QVector<std::shared_ptr<Root>> mapFunction(const TransferFunction &tf){
 //    TransferFunction _tf(tf.getZeroVectorStr(),tf.getPolesVectorStr());
 //    _tf.setMaxK(tf.getMaxK());
     return tf.getRootsClosedLoop1();
 }
 
-static void reduceFunction(QList<std::shared_ptr<Root> > &rlist, const QList<std::shared_ptr<Root> > &roots){
+static void reduceFunction(QVector<std::shared_ptr<Root>> &rlist, const QVector<std::shared_ptr<Root>> &roots){
     rlist.append(roots);
 }
 
-static QList<std::shared_ptr<Root> > mapLocusFunction(const TransferFunction &tf){
+static QVector<std::shared_ptr<Root>> mapLocusFunction(const TransferFunction &tf){
 //    TransferFunction _tf(tf.getZeroVectorStr(),tf.getPolesVectorStr());
 //    _tf.setMaxK(tf.getMaxK());
     return tf.getRootLocus();
 }
 
-static void reduceLocusFunction(QList<std::shared_ptr<Root> > &rlist, const QList<std::shared_ptr<Root> > &roots){
+static void reduceLocusFunction(QVector<std::shared_ptr<Root>> &rlist, const QVector<std::shared_ptr<Root>> &roots){
 
     rlist.append(roots);
 }

@@ -14,7 +14,7 @@ RootTableModel *ControlSystem::getRootTModel() const
 void ControlSystem::updateRootTable()
 {
     m_rootTModel->removeRows(0,m_rootTModel->rowCount());
-    QList<std::shared_ptr<Root>> roots = m_csTF->getRootsClosedLoop(false);
+    QVector<std::shared_ptr<Root>> roots = m_csTF->getRootsClosedLoop(false);
 
     for (int i = 0; i < roots.count(); i++)
     {

@@ -117,12 +117,12 @@ void RootLocusGraph::plotRootLocus1()
 
 }
 
-void RootLocusGraph::getXYvectors(const QList<std::shared_ptr<Root>> &roots, QVector<double> &x, QVector<double> &y){
+void RootLocusGraph::getXYvectors(const QVector<std::shared_ptr<Root>> &roots, QVector<double> &x, QVector<double> &y){
     int size = roots.size();
     x.resize(size);
-    x.squeeze();
+    //x.squeeze();
     y.resize(size);
-    y.squeeze();
+    //y.squeeze();
 
     for (int i = 0; i < size ; i++){
         Root *r = roots[i].get();

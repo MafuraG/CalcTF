@@ -6,17 +6,17 @@ RootLocus::RootLocus()
 
 }
 
-QList<std::shared_ptr<Root> > RootLocus::poleR() const
+QVector<std::shared_ptr<Root>> RootLocus::poleR() const
 {
     return m_poleR;
 }
 
-QList<std::shared_ptr<Root> > RootLocus::zeroR() const
+QVector<std::shared_ptr<Root>> RootLocus::zeroR() const
 {
     return m_zeroR;
 }
 
-QList<std::shared_ptr<Root> > RootLocus::locus() const
+QVector<std::shared_ptr<Root>> RootLocus::locus() const
 {
     return m_locus;
 }
@@ -26,12 +26,12 @@ double RootLocus::K() const
     return m_K;
 }
 
-QList<QList<std::shared_ptr<Root> > > RootLocus::locus1() const
+QList<QVector<std::shared_ptr<Root>> > RootLocus::locus1() const
 {
     return m_locus1;
 }
 
-void RootLocus::setLocus1(const QList<QList<std::shared_ptr<Root> > > &locus1)
+void RootLocus::setLocus1(const QList<QVector<std::shared_ptr<Root>>> &locus1)
 {
     m_locus1 = locus1;
 }
@@ -47,7 +47,7 @@ void RootLocus::setTf(const std::shared_ptr<IntervalTF> &tf)
     //calculateLocus();
 }
 
-double RootLocus::calculateDelta(QList<std::shared_ptr<Root>> &rootList1 , QList<std::shared_ptr<Root>> &rootList2)
+double RootLocus::calculateDelta(QVector<std::shared_ptr<Root>> &rootList1 , QVector<std::shared_ptr<Root>> &rootList2)
 {
     if (rootList1.count() != rootList2.count()) return 0;
 
@@ -75,7 +75,7 @@ void RootLocus::calculateLocus()
 
     m_tf->generateTF();
 
-    //QList<QList<std::shared_ptr<Root>>> rlocus;
+    //QList<QVector<std::shared_ptr<Root>>> rlocus;
     //m_locus = m_tf->getRootLocus();
 
 
